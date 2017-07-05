@@ -1,0 +1,33 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        
+        {
+            "type": "PowerShell",
+            "request": "launch",
+            "name": "PowerShell Launch Current File",
+            "script": "${file}",
+            "args": [],
+            "cwd": "${file}"
+        },
+        {
+            "name": "C++ Launch (Windows)",
+            "type": "cppdbg",
+            "request": "launch",
+            "program": "${workspaceRoot}/bin/objects.exe",
+            "args": ["--test"],
+            "stopAtEntry": false,
+            "cwd": "${workspaceRoot}",
+            "environment": [],
+            "externalConsole": true,
+            "miDebuggerPath": "C:/Program Files (x86)/CodeBlocks/MinGW/bin/gdb.exe"
+        },
+        {
+            "name": "C++ Attach (Windows)",
+            "type": "cppdbg",
+            "request": "attach",
+            "processId": "${command:pickProcess}",
+            "program": "${workspaceRoot}/bin/objects.exe"
+        }
+    ]
+}

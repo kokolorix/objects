@@ -1,0 +1,39 @@
+{
+	"version": "0.1.0",
+	"command": "g++",
+	"isShellCommand": true,
+	// compiles and links with debugger information
+	"args": [
+		"-g",
+		"-std=c++0x",
+		// "-Wall",
+		"-Wc++0x-compat",
+		"-o",
+		"${workspaceRoot}/bin/objects.exe",
+		"${workspaceRoot}/*.cpp",
+		"-ID:/Projects/boost_1_64_0"
+		// "-LD:/Projects/boost_1_64_0/bin/gcc-32/debug/lib",
+		// "D:/Projects/boost_1_64_0/bin/gcc-32/debug/lib/libboost_system-mgw49-mt-d-1_64.a",
+		// "D:/Projects/boost_1_64_0/bin/gcc-32/debug/lib/libboost_thread-mgw49-mt-d-1_64.a",
+		// "D:/Projects/boost_1_64_0/bin/gcc-32/debug/lib/libboost_regex-mgw49-mt-d-1_64.a"
+	],
+	// without debugger information
+	// "args": ["-o", "hello.exe", "hello.cpp"],
+	"showOutput": "always",
+	"problemMatcher": {
+		"owner": "cpp",
+		"fileLocation": [
+			"absolute"
+			// "relative",
+			// "${workspaceRoot}"
+		],
+		"pattern": {
+			"regexp": "^(.*):(\\d+):(\\d+):\\s+(warning|error):\\s+(.*)$",
+			"file": 1,
+			"line": 2,
+			"column": 3,
+			"severity": 4,
+			"message": 5
+		}
+	}
+}
