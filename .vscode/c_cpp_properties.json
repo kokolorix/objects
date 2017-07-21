@@ -1,64 +1,33 @@
 {
     "configurations": [
         {
-            "name": "Mac",
-            "includePath": [
-                "/usr/include"
-            ],
-            "browse": {
-                "limitSymbolsToIncludedHeaders": true,
-                "databaseFilename": "",
-                "path": [
-                    "/usr/include"
-                ]
-            },
-            "intelliSenseMode": "clang-x64"
-        },
-        {
-            "name": "Linux",
-            "includePath": [
-                "/usr/include"
-            ],
-            "browse": {
-                "limitSymbolsToIncludedHeaders": true,
-                "databaseFilename": "",
-                "path": [
-                    "/usr/include"
-                ]
-            },
-            "intelliSenseMode": "clang-x64"
-        },
-        {
             "name": "Win32",
+            "intelliSenseMode": "clang-x64",
             "includePath": [
-                "c:/Program Files (x86)/Microsoft Visual Studio 14.0/VC/include"
-            ],
-            "browse": {
-                "limitSymbolsToIncludedHeaders": true,
-                "databaseFilename": "",
-                "path": [
-                    "c:/Program Files (x86)/Microsoft Visual Studio 14.0/VC/include"
-                ]
-            },
-            "intelliSenseMode": "msvc-x64"
-        },
-        {
-            "name": "Mingw",
-            "includePath": [
-                "C:/Program Files (x86)/CodeBlocks/MinGW/include",
+                "${workspaceRoot}",
                 "C:/Program Files (x86)/CodeBlocks/MinGW/lib/gcc/mingw32/4.9.2/include/c++",
-                "D:/Projects/boost_1_64_0"
+                "C:/Program Files (x86)/CodeBlocks/MinGW/lib/gcc/mingw32/4.9.2/include/c++/mingw32",
+                "C:/Program Files (x86)/CodeBlocks/MinGW/lib/gcc/mingw32/4.9.2/include/c++/backward",
+                "C:/Program Files (x86)/CodeBlocks/MinGW/lib/gcc/mingw32/4.9.2/include",
+                "C:/Program Files (x86)/CodeBlocks/MinGW/include",
+                "C:/Program Files (x86)/CodeBlocks/MinGW/lib/gcc/mingw32/4.9.2/include-fixed"
+            ],
+            "defines": [
+                "_DEBUG",
+                "UNICODE",
+                "__GNUC__=5",
+                "__cdecl=__attribute__((__cdecl__))"
             ],
             "browse": {
-                "limitSymbolsToIncludedHeaders": true,
-                "databaseFilename": "",
                 "path": [
-                    "C:/Program Files (x86)/CodeBlocks/MinGW/include",
-                    "C:/Program Files (x86)/CodeBlocks/MinGW/lib/gcc/mingw32/4.9.2/include/c++",
-                    "D:/Projects/boost_1_64_0"
-                ]
-            },
-            "intelliSenseMode": "msvc-x64"
+                    "C:/Program Files (x86)/CodeBlocks/MinGW/lib/gcc/mingw32/4.9.2/include",
+                    "C:/Program Files (x86)/CodeBlocks/MinGW/lib/gcc/mingw32/4.9.2/include-fixed",
+                    "C:/Program Files (x86)/CodeBlocks/MinGW/include/*"
+                ],
+                "limitSymbolsToIncludedHeaders": true,
+                "databaseFilename": ""
+            }
         }
-    ]
+    ],
+    "version": 2
 }

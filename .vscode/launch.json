@@ -1,7 +1,14 @@
 {
     "version": "0.2.0",
     "configurations": [
-        
+        {
+            "type": "lldb",
+            "request": "launch",
+            "name": "LLDB Launch",
+            "program": "${workspaceRoot}/bin/${workspaceRootFolderName}.exe",
+            "args": [],
+            "cwd": "${workspaceRoot}"
+        },
         {
             "type": "PowerShell",
             "request": "launch",
@@ -14,7 +21,7 @@
             "name": "C++ Launch (Windows)",
             "type": "cppdbg",
             "request": "launch",
-            "program": "${workspaceRoot}/bin/objects.exe",
+            "program": "${workspaceRoot}/bin/${workspaceRootFolderName}.exe",
             "args": ["--test"],
             "stopAtEntry": false,
             "cwd": "${workspaceRoot}",
@@ -27,7 +34,7 @@
             "type": "cppdbg",
             "request": "attach",
             "processId": "${command:pickProcess}",
-            "program": "${workspaceRoot}/bin/objects.exe"
+            "program": "${workspaceRoot}/bin/${workspaceRootFolderName}.exe"
         }
     ]
 }
