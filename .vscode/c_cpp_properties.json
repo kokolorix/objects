@@ -5,6 +5,7 @@
             "intelliSenseMode": "clang-x64",
             "includePath": [
                 "${workspaceRoot}",
+                "D:/Projects/boost_1_64_0",
                 "C:/Program Files (x86)/CodeBlocks/MinGW/lib/gcc/mingw32/4.9.2/include/c++",
                 "C:/Program Files (x86)/CodeBlocks/MinGW/lib/gcc/mingw32/4.9.2/include/c++/mingw32",
                 "C:/Program Files (x86)/CodeBlocks/MinGW/lib/gcc/mingw32/4.9.2/include/c++/backward",
@@ -22,7 +23,8 @@
                 "path": [
                     "C:/Program Files (x86)/CodeBlocks/MinGW/lib/gcc/mingw32/4.9.2/include",
                     "C:/Program Files (x86)/CodeBlocks/MinGW/lib/gcc/mingw32/4.9.2/include-fixed",
-                    "C:/Program Files (x86)/CodeBlocks/MinGW/include/*"
+                    "C:/Program Files (x86)/CodeBlocks/MinGW/include/*",
+                    "D:/Projecs/boost_1_64_0"
                 ],
                 "limitSymbolsToIncludedHeaders": true,
                 "databaseFilename": ""

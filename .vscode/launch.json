@@ -22,7 +22,11 @@
             "type": "cppdbg",
             "request": "launch",
             "program": "${workspaceRoot}/bin/${workspaceRootFolderName}.exe",
-            "args": ["--test"],
+            "args": [
+                "0.0.0.0",
+                "80",
+                "."
+            ],
             "stopAtEntry": false,
             "cwd": "${workspaceRoot}",
             "environment": [],
