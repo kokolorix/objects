@@ -21,10 +21,11 @@
             ],
             "browse": {
                 "path": [
-                    "C:/Program Files (x86)/CodeBlocks/MinGW/lib/gcc/mingw32/4.9.2/include",
+                    "${workspaceRoot}",
+                    "D:/Projects/boost_1_64_0",
+                    "C:/Program Files (x86)/CodeBlcks/MinGW/lib/gcc/mingw32/4.9.2/include",
                     "C:/Program Files (x86)/CodeBlocks/MinGW/lib/gcc/mingw32/4.9.2/include-fixed",
-                    "C:/Program Files (x86)/CodeBlocks/MinGW/include/*",
-                    "D:/Projecs/boost_1_64_0"
+                    "C:/Program Files (x86)/CodeBlocks/MinGW/include/*"
                 ],
                 "limitSymbolsToIncludedHeaders": true,
                 "databaseFilename": ""

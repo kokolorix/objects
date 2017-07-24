@@ -4,7 +4,7 @@
 	"version": "2.0.0",
 	"tasks": [
 		{
-			"taskName": "Build exe",
+			"taskName": "Build exe g++",
 			"isBackground": true,
 			"type": "shell",
 			"group": "build",
