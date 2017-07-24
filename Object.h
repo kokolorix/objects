@@ -12,8 +12,10 @@ using ObjectTypeId = boost::uuids::uuid;
 class Object : public Thing
 {
  public:
-	Object(ObjectId id, PropertyVector p) : _id(id), _properties(p.begin(), p.end()) {}
-	Object(PropertyVector p) : Object(GenerateId(), p) {}
+	template<class PropertyListT>
+	Object(ObjectId id, PropertyListT p) : _id(id), _properties(p.begin(), p.end()) {}
+	template<class PropertyListT>
+	Object(PropertyListT p) : Object(GenerateId(), p) {}
 	virtual ~Object() {}
 	virtual ValuePtr operator [] (String name)
 	{ 
@@ -26,6 +28,10 @@ class Object : public Thing
 		return std::dynamic_pointer_cast<Value>(prop->value());
 	}
 
+	template<class PropertyListT>
+	static ObjectPtr make(ObjectId id, PropertyListT p) { return std::make_shared<Object>(id, p); }
+	template<class PropertyListT>
+	static ObjectPtr make( PropertyListT p) { return std::make_shared<Object>(GenerateId(), p); }
  private:
 	ObjectId _id;
 	PropertySet _properties;

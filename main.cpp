@@ -8,10 +8,12 @@
 
 int main()
 {
-	ValuePtr value = Value::make(66);
-	PropertyPtr property1 = Property::make("Property1", Int32Value::make(44));
-	PropertyPtr property2 = Property::make("Property2", FloatValue::make(3.14));
-	PropertyPtr property3 = Property::make("Property3", StringValue::make(L"Hallo"));
+	ValuePtr a2e = Value::make(42);
+	PropertyPtr Name = Property::make("Name", StringValue::make(L"TheFirstObject"));
+	PropertyPtr A2E = Property::make("AnswerToEverything", a2e);
+	PropertyPtr Pi = Property::make("Pi", FloatValue::make(3.14));
+	ObjectPtr obj = Object::make(PropertySet{Name, A2E, Pi});
+
 	return 0;
 }
 

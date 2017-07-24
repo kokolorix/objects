@@ -17,8 +17,7 @@
 				"env": {
 					"Path": "C:/Program Files (x86)/CodeBlocks/MinGW/bin;${env:Path}",
 					"C_INCLUDE_PATH ": "${workspaceRoot};C:/Program Files (x86)/CodeBlocks/MinGW/include;C:/Program Files (x86)/Windows Kits/10/Include/10.0.10586.0/um;C:/Program Files (x86)/CodeBlocks/MinGW/include/windows",
-					"CPLUS_INCLUDE_PATH": "${workspaceRoot};C:/Program Files (x86)/CodeBlocks/MinGW/lib/gcc/mingw32/4.9.2/include/c++;D:/Projects/boost_1_64_0",
-					"LD_LIBRARY_PATH ": "D:/Projects/boost_1_64_0/bin/gcc-32/debug/lib"
+					"CPLUS_INCLUDE_PATH": "${workspaceRoot};C:/Program Files (x86)/CodeBlocks/MinGW/lib/gcc/mingw32/4.9.2/include/c++;D:/Projects/boost_1_64_0"
 				}
 			},
 			"command": "g++",
@@ -29,15 +28,15 @@
 				"-D_WIN32_WINNT=0x0600",
 				"-Wc++0x-compat",
 				"${workspaceRoot}/*.cpp",
-				// "${workspaceRoot}/web_server/*.cpp",
+				"${workspaceRoot}/web_server/*.cpp",
 				"-o",
 				"${workspaceRoot}/bin/${workspaceRootFolderName}.exe",
-				// "-Llib",
-				// "-lws2_32",
-				// "-lwsock32",
-				// "-lboost_system-mgw49-mt-d-1_64",
-				// "-lboost_date_time-mgw49-mt-d-1_64",
-				// "-lboost_filesystem-mgw49-mt-d-1_64",
+				"-Llib",
+				"-lws2_32",
+				"-lwsock32",
+				"-lboost_system-mgw49-mt-d-1_64",
+				"-lboost_date_time-mgw49-mt-d-1_64",
+				"-lboost_filesystem-mgw49-mt-d-1_64",
 				""
 			],
 			"problemMatcher": {
