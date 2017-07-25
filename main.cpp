@@ -4,7 +4,10 @@
 #include <thread>
 #include <boost/asio.hpp>
 #include "web_server/server.hpp"
+#include "json.hpp"
 #include "Object.h"
+
+using json = nlohmann::json;
 
 int main()
 {
@@ -13,6 +16,22 @@ int main()
 	PropertyPtr A2E = Property::make("AnswerToEverything", a2e);
 	PropertyPtr Pi = Property::make("Pi", FloatValue::make(3.14));
 	ObjectPtr obj = Object::make(PropertySet{Name, A2E, Pi});
+
+	json j = {
+		{ "pi", 3.141 },
+		{ "happy", true },
+		{ "name", "Niels" },
+		{ "nothing", nullptr },
+		{ "answer",{
+			{ "everything", 42 }
+		} },
+		{ "list",{ 1, 0, 2 } },
+		{ "object",{
+			{ "currency", "USD" },
+			{ "value", 42.99 }
+		} }
+	};
+	std::string s = j.dump();
 
 	return 0;
 }

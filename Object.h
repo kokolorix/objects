@@ -17,6 +17,7 @@ class Object : public Thing
 	template<class PropertyListT>
 	Object(PropertyListT p) : Object(GenerateId(), p) {}
 	virtual ~Object() {}
+	virtual operator String  () const { return toString(); }
 	virtual ValuePtr operator [] (String name)
 	{ 
 		Property search(name);

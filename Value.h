@@ -26,6 +26,7 @@ class Value : public Thing
 {
  public:
 	virtual ~Value() {}
+	virtual operator String  () const { return toString(); }
 	virtual operator int32_t  () const { throw NotImplementetException(__func__); }
 	virtual operator int64_t  () const { throw NotImplementetException(__func__); }
 	virtual operator uint64_t  () const { throw NotImplementetException(__func__); }

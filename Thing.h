@@ -21,12 +21,14 @@ class Thing
 {
  public:
 	virtual ~Thing() {}
-	virtual operator String() const
+	virtual String toString() const
 	{
 		std::ostringstream os;
 		os << typeid(*this).name() << " (" << std::hex << this << ")";
 		return os.str();
 	}
+	virtual String to_json() const { throw NotImplementetException(__func__); };
+	virtual void from_json(const String& jsonStr) const { throw NotImplementetException(__func__); };
 };
 
 using ThingPtr = std::shared_ptr<Thing>;

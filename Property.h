@@ -13,6 +13,7 @@ class Property : public Thing
  public:
 	Property(String n, ThingPtr v = ThingPtr()) : _name(n), _value(v) {}
 	virtual ~Property() {}
+	virtual operator String  () const { return toString(); }
 	String name() const { return _name; }
 	ThingPtr value() const{ return _value; }
 	static PropertyPtr make(String n, ThingPtr v = ThingPtr()) { return std::make_shared<Property>(n, v); }
