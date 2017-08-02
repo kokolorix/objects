@@ -6,16 +6,17 @@
 
 using String = std::string;
 // using Exception = std::exception;
-class Exception : public std::exception
+struct Exception : public std::exception
 {
- public:
 	Exception(const char *msg) : _msg(msg) {}
 	virtual const char *what() const noexcept override { return _msg.c_str(); }
 
  private:
 	String _msg;
 };
-using NotImplementetException = Exception;
+struct NotImplementetException : public Exception {using Exception::Exception;};
+struct NotFoundException : public Exception {using Exception::Exception;};
+struct ImpossibleCastException : public Exception {using Exception::Exception;};
 
 class Thing
 {
@@ -27,8 +28,10 @@ class Thing
 		os << typeid(*this).name() << " (" << std::hex << this << ")";
 		return os.str();
 	}
-	virtual String to_json() const { throw NotImplementetException(__func__); };
-	virtual void from_json(const String& jsonStr) const { throw NotImplementetException(__func__); };
+	//virtual String to_json() const { throw NotImplementetException(__func__); };
+	//virtual void from_json(const String& jsonStr) const { throw NotImplementetException(__func__); };
+	virtual void write(std::ostream& os) const { throw NotImplementetException(__func__); }
+	virtual void read(std::ostream& os) const { throw NotImplementetException(__func__); }
 };
 
 using ThingPtr = std::shared_ptr<Thing>;

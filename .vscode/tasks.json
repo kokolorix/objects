@@ -1,6 +1,4 @@
 {
-	// See https://go.microsoft.com/fwlink/?LinkId=733558
-	// for the documentation about the tasks.json format
 	"version": "2.0.0",
 	"tasks": [
 		{
@@ -24,7 +22,6 @@
 			"args": [
 				"-g",
 				"-std=c++0x",
-				// "-Wall",
 				"-D_WIN32_WINNT=0x0600",
 				"-Wc++0x-compat",
 				"${workspaceRoot}/*.cpp",

@@ -161,6 +161,7 @@
     <ClCompile Include="web_server\server.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="json\json.hpp" />
     <ClInclude Include="Object.h" />
     <ClInclude Include="Thing.h" />
     <ClInclude Include="Property.h" />
@@ -174,6 +175,10 @@
     <ClInclude Include="web_server\request_handler.hpp" />
     <ClInclude Include="web_server\request_parser.hpp" />
     <ClInclude Include="web_server\server.hpp" />
+    <ClInclude Include="xml\rapidxml.hpp" />
+    <ClInclude Include="xml\rapidxml_iterators.hpp" />
+    <ClInclude Include="xml\rapidxml_print.hpp" />
+    <ClInclude Include="xml\rapidxml_utils.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
