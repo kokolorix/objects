@@ -6,13 +6,13 @@
 
 #include "web_server/server.hpp"
 
-#include "xml/rapidxml.hpp"
-#include "xml/rapidxml_iterators.hpp"
-using xml_document = rapidxml::xml_document<char>;
-using xml_node = rapidxml::xml_node<char>;
-using xml_attribute = rapidxml::xml_attribute<char>;
-using node_iterator = rapidxml::node_iterator<char>;
-using attribute_iterator = rapidxml::attribute_iterator<char>;
+// #include "xml/rapidxml.hpp"
+// #include "xml/rapidxml_iterators.hpp"
+// using xml_document = rapidxml::xml_document<char>;
+// using xml_node = rapidxml::xml_node<char>;
+// using xml_attribute = rapidxml::xml_attribute<char>;
+// using node_iterator = rapidxml::node_iterator<char>;
+// using attribute_iterator = rapidxml::attribute_iterator<char>;
 
 #include "json/json.hpp"
 using json = nlohmann::json;
