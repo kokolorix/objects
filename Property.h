@@ -18,6 +18,7 @@ class Property : public Thing
 	const String& name() const { return _name; }
 	String& name() { return _name; }
 	ValuePtr value() const{ return _value; }
+	ValuePtr& value() { return _value; }
 	static PropertyPtr make(String n, ValuePtr v = ValuePtr()) { return std::make_shared<Property>(n, v); }
 
 private:

@@ -19,31 +19,50 @@ using json = nlohmann::json;
 
 #include "Object.h"
 
-void from_json(const json& j, PropertyPtr& p) 
-{	
-
-	p = Property::make(j.at("name").get<std::string>());
-
-	if(j.is_boolean()) p->value() = BooleanValue::make(j.at("value").get<bool>());
-	else if(j.is_number_integer()) p->value() = Int32Value::make(j.at("value").get<int32_t>());
-	else if(j.is_string()) p->value() = StringValue::make(j.at("value").get<std::string>());
+void from_json(const json& j, ValuePtr& v)
+{
+	if (j.is_boolean()) v = BooleanValue::make(j.get<bool>());
+	else if (j.is_number_integer()) v = Int32Value::make(j.get<int32_t>());
+	else if (j.is_string()) v = StringValue::make(j.get<String>());
 	else if (j.is_object())
 	{
 		ObjectPtr o = j;
-		p->value() = ObjectValue::make(o);
+		v = ObjectValue::make(o);
+	}
+
+}
+
+
+void from_json(const json& j, PropertyPtr& p)
+{
+	p = Property::make(String());
+
+	if (j.is_array())
+	{
+		VectorValuePtr v = VectorValue::make(std::vector<ValuePtr>());
+
+		for (json::const_iterator i = j.begin(); i != j.end(); ++i)
+			v->value().push_back(*i);
+
+		p->value() = v;
+	}
+	else
+	{
+		p->value() = j;
 	}
 }
+
 
 void from_json(const json& j, ObjectPtr& o)
 {
 	o = Object::make();
-	for(const json& child : j)
+	for (json::const_iterator i = j.begin(); i != j.end(); ++i)
 	{
-		PropertyPtr p = j;
+		PropertyPtr p = *i;
+		p->name() = i.key();
 		o->properties().push_back(p);
 	}
 }
-
 
 
 int main()
@@ -59,13 +78,9 @@ int main()
 	std::ostringstream os;
 
 	std::ifstream is("D:\\Projects\\objects\\.vscode\\tasks.json");
-
 	json j;
 	is >> j;
-	for (json& c : j)
-	{
-		ObjectPtr obj = j;
-	}
+	ObjectPtr o = j;
 
 	return 0;
 }

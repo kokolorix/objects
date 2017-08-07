@@ -56,6 +56,8 @@ class ValueImpl : public Value
  public:
 	ValueImpl() : _value() {}
 	ValueImpl(T v) : _value(v) {}
+	const T& value() const { return _value; }
+	T& value() { return _value; }
 	//virtual operator T  () const { return _value; }
 
 	//template<typename ConvT>
@@ -110,3 +112,7 @@ template<> UuIdValue::operator int32_t() const { throw ImpossibleCastException(_
 using ObjectValue = ValueImpl<ObjectPtr>;
 using ObjectValuePtr = std::shared_ptr<ObjectPtr>;
 template<> ObjectValue::operator int32_t() const { throw ImpossibleCastException(__func__); }
+
+using VectorValue = ValueImpl<std::vector<ValuePtr> >;
+using VectorValuePtr = std::shared_ptr<VectorValue>;
+template<> VectorValue::operator int32_t() const { throw ImpossibleCastException(__func__); }
