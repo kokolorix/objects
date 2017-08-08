@@ -7,16 +7,24 @@
 		<Option compiler="gcc" />
 		<Build>
 			<Target title="Debug">
-				<Option output="bin/Debug/Iterators" prefix_auto="1" extension_auto="1" />
+				<Option output="bin/Debug/objects" prefix_auto="1" extension_auto="1" />
 				<Option object_output="obj/Debug/" />
 				<Option type="1" />
 				<Option compiler="gcc" />
 				<Compiler>
 					<Add option="-g" />
 				</Compiler>
+				<Linker>
+					<Add library="ws2_32" />
+					<Add library="wsock32" />
+					<Add library="boost_system-mgw49-mt-d-1_64" />
+					<Add library="boost_filesystem-mgw49-mt-d-1_64" />
+					<Add library="boost_date_time-mgw49-mt-d-1_64" />
+					<Add directory="lib" />
+				</Linker>
 			</Target>
 			<Target title="Release">
-				<Option output="bin/Release/Iterators" prefix_auto="1" extension_auto="1" />
+				<Option output="bin/Release/objects" prefix_auto="1" extension_auto="1" />
 				<Option object_output="obj/Release/" />
 				<Option type="1" />
 				<Option compiler="gcc" />
@@ -31,8 +39,37 @@
 		<Compiler>
 			<Add option="-Wall" />
 			<Add option="-fexceptions" />
+			<Add option="-D_WIN32_WINNT=0x0600" />
 		</Compiler>
+		<Unit filename="Json.cpp" />
+		<Unit filename="Json.h" />
+		<Unit filename="Object.h" />
+		<Unit filename="Property.h" />
+		<Unit filename="Thing.h" />
+		<Unit filename="Value.h" />
+		<Unit filename="helpers.h" />
+		<Unit filename="json/json.hpp" />
 		<Unit filename="main.cpp" />
+		<Unit filename="web_server/connection.cpp" />
+		<Unit filename="web_server/connection.hpp" />
+		<Unit filename="web_server/connection_manager.cpp" />
+		<Unit filename="web_server/connection_manager.hpp" />
+		<Unit filename="web_server/header.hpp" />
+		<Unit filename="web_server/mime_types.cpp" />
+		<Unit filename="web_server/mime_types.hpp" />
+		<Unit filename="web_server/reply.cpp" />
+		<Unit filename="web_server/reply.hpp" />
+		<Unit filename="web_server/request.hpp" />
+		<Unit filename="web_server/request_handler.cpp" />
+		<Unit filename="web_server/request_handler.hpp" />
+		<Unit filename="web_server/request_parser.cpp" />
+		<Unit filename="web_server/request_parser.hpp" />
+		<Unit filename="web_server/server.cpp" />
+		<Unit filename="web_server/server.hpp" />
+		<Unit filename="xml/rapidxml.hpp" />
+		<Unit filename="xml/rapidxml_iterators.hpp" />
+		<Unit filename="xml/rapidxml_print.hpp" />
+		<Unit filename="xml/rapidxml_utils.hpp" />
 		<Extensions>
 			<code_completion />
 			<envvars />

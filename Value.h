@@ -4,14 +4,20 @@
 #include <boost/uuid/uuid.hpp>
 #include <boost/uuid/uuid_io.hpp>
 #include <boost/uuid/uuid_serialize.hpp>
+#ifdef __MINGW32__
+#pragma GCC diagnostic ignored "-Wconversion-null"
+#endif
 #include <boost/uuid/uuid_generators.hpp>
+#ifdef __MINGW32__
+#pragma GCC diagnostic pop
+#endif
 #include <boost/lexical_cast.hpp>
 
 namespace
 {
 boost::uuids::random_generator GenerateId;
 boost::uuids::nil_generator GenerateNullId;
-boost::uuids::string_generator GenerateIdFromString;
+//boost::uuids::string_generator GenerateIdFromString;
 }
 using UuId = boost::uuids::uuid;
 
@@ -77,11 +83,6 @@ class ValueImpl : public Value
 private:
 	T _value;
 };
-template<typename T>
-inline ValueImpl<T>::operator int32_t () const 
-{ 
-	return boost::lexical_cast<int32_t>(_value); 
-}
 
 template<typename T>
 inline std::shared_ptr<ValueImpl<T>> Value::make(T v)
@@ -91,28 +92,33 @@ inline std::shared_ptr<ValueImpl<T>> Value::make(T v)
 
 using StringValue = ValueImpl<String>;
 using StringValuePtr = std::shared_ptr<StringValue>;
-//template<> StringValue::operator int32_t() const { return boost::lexical_cast<int32_t>(_value); }
 
 using BooleanValue = ValueImpl<bool>;
 using BooleanValuePtr = std::shared_ptr<BooleanValue>;
-//template<> Int32Value::operator int32_t() const { return boost::lexical_cast<int32_t>(_value); }
 
 using Int32Value = ValueImpl<int32_t>;
 using Int32ValuePtr = std::shared_ptr<Int32Value>;
-//template<> Int32Value::operator int32_t() const { return boost::lexical_cast<int32_t>(_value); }
 
 using FloatValue = ValueImpl<float>;
 using floatValuePtr = std::shared_ptr<FloatValue>;
-//template<> FloatValue::operator int32_t() const { return boost::lexical_cast<int32_t>(_value); }
 
 using UuIdValue = ValueImpl<UuId>;
 using UuIdValuePtr = std::shared_ptr<UuIdValue>;
-template<> UuIdValue::operator int32_t() const { throw ImpossibleCastException(__func__); }
-
 using ObjectValue = ValueImpl<ObjectPtr>;
 using ObjectValuePtr = std::shared_ptr<ObjectPtr>;
-template<> ObjectValue::operator int32_t() const { throw ImpossibleCastException(__func__); }
 
 using VectorValue = ValueImpl<std::vector<ValuePtr> >;
 using VectorValuePtr = std::shared_ptr<VectorValue>;
-template<> VectorValue::operator int32_t() const { throw ImpossibleCastException(__func__); }
+
+namespace boost
+{
+template<> inline int32_t lexical_cast(const UuIdValue&){ throw ImpossibleCastException(__func__); }
+template<> inline int32_t lexical_cast(const ObjectPtr&){ throw ImpossibleCastException(__func__); }
+template<> inline int32_t lexical_cast(const std::vector<ValuePtr>&){ throw ImpossibleCastException(__func__); }
+}
+
+template<typename T>
+inline ValueImpl<T>::operator int32_t () const
+{
+	return boost::lexical_cast<int32_t>(_value);
+}

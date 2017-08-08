@@ -14,56 +14,9 @@
 // using node_iterator = rapidxml::node_iterator<char>;
 // using attribute_iterator = rapidxml::attribute_iterator<char>;
 
-#include "json/json.hpp"
-using json = nlohmann::json;
 
 #include "Object.h"
-
-void from_json(const json& j, ValuePtr& v)
-{
-	if (j.is_boolean()) v = BooleanValue::make(j.get<bool>());
-	else if (j.is_number_integer()) v = Int32Value::make(j.get<int32_t>());
-	else if (j.is_string()) v = StringValue::make(j.get<String>());
-	else if (j.is_object())
-	{
-		ObjectPtr o = j;
-		v = ObjectValue::make(o);
-	}
-
-}
-
-
-void from_json(const json& j, PropertyPtr& p)
-{
-	p = Property::make(String());
-
-	if (j.is_array())
-	{
-		VectorValuePtr v = VectorValue::make(std::vector<ValuePtr>());
-
-		for (json::const_iterator i = j.begin(); i != j.end(); ++i)
-			v->value().push_back(*i);
-
-		p->value() = v;
-	}
-	else
-	{
-		p->value() = j;
-	}
-}
-
-
-void from_json(const json& j, ObjectPtr& o)
-{
-	o = Object::make();
-	for (json::const_iterator i = j.begin(); i != j.end(); ++i)
-	{
-		PropertyPtr p = *i;
-		p->name() = i.key();
-		o->properties().push_back(p);
-	}
-}
-
+#include "Json.h"
 
 int main()
 {
@@ -75,12 +28,6 @@ int main()
 	ObjectPtr obj = Object::make(PropertySet{Name, A2E, Pi});
 
 	//int32_t id = *Id->value();
-	std::ostringstream os;
-
-	std::ifstream is("D:\\Projects\\objects\\.vscode\\tasks.json");
-	json j;
-	is >> j;
-	ObjectPtr o = j;
 
 	return 0;
 }
