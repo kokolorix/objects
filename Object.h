@@ -20,7 +20,7 @@ class Object : public Thing
 	virtual ~Object() {}
 	virtual operator String  () const { return toString(); }
 	ValuePtr operator [] (String name)
-	{ 
+	{
 		PropertyVector::iterator it = std::find_if(_properties.begin(), _properties.end(), [name](PropertyPtr p) {return p->name() == name; });
 		if(it == _properties.end())
 			throw NotFoundException(__func__);
@@ -33,6 +33,8 @@ class Object : public Thing
 		return prop->value();
 	}
 
+    const ObjectId& id() const { return _id; }
+    ObjectId& id() { return _id; }
 	PropertyVector& properties() { return _properties; }
 	const PropertyVector& properties() const { return _properties; }
 

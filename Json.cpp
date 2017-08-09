@@ -2,99 +2,132 @@
 
 using json = nlohmann::json;
 
-void from_json(const json& j, ValuePtr& v)
+void from_json(const json &j, ValuePtr &v)
 {
-	if (j.is_boolean()) v = BooleanValue::make(j.get<bool>());
-	else if (j.is_number_integer()) v = Int32Value::make(j.get<int32_t>());
-	else if (j.is_string()) v = StringValue::make(j.get<String>());
-	else if (j.is_object())
-	{
-		ObjectPtr o = j;
-		v = ObjectValue::make(o);
-	}
-
+    if (j.is_boolean())
+        v = BooleanValue::make(j.get<bool>());
+    else if (j.is_number_integer())
+        v = Int32Value::make(j.get<int32_t>());
+    else if (j.is_string())
+        v = StringValue::make(j.get<String>());
+    else if (j.is_object())
+    {
+        ObjectPtr o = j;
+        v = ObjectValue::make(o);
+    }
 }
 
-
-void from_json(const json& j, PropertyPtr& p)
+void from_json(const json &j, PropertyPtr &p)
 {
-	p = Property::make(String());
+    p = Property::make(String());
 
-	if (j.is_array())
-	{
-		VectorValuePtr v = VectorValue::make(std::vector<ValuePtr>());
+    if (j.is_array())
+    {
+        VectorValuePtr v = VectorValue::make(std::vector<ValuePtr>());
 
-		for (json::const_iterator i = j.begin(); i != j.end(); ++i)
-			v->value().push_back(*i);
+        for (json::const_iterator i = j.begin(); i != j.end(); ++i)
+            v->value().push_back(*i);
 
-		p->value() = v;
-	}
-	else
-	{
-		p->value() = j;
-	}
+        p->value() = v;
+    }
+    else
+    {
+        p->value() = j;
+    }
 }
 
-
-void to_json(json& j, const ValuePtr& v)
+void from_json(const json &j, ObjectPtr &o)
 {
-	//j = json{ { "name", p.name },{ "address", p.address },{ "age", p.age } };
+    o = Object::make();
+    for (obj::json::const_iterator i = j.begin(); i != j.end(); ++i)
+    {
+        PropertyPtr p = *i;
+        p->name() = i.key();
+        o->properties().push_back(p);
+    }
 }
 
-
-void to_json(json& j, const PropertyPtr& p)
+void to_json(json &j, const ValuePtr &p)
 {
-	//j = json{ { "name", p.name },{ "address", p.address },{ "age", p.age } };
+    if (auto v = std::dynamic_pointer_cast<StringValue>(p))
+        j.back() = v->value();
+    // else if (BooleanValuePtr v = p)
+    //     j.back() = v->value();
+    // else if (Int32ValuePtr v = p)
+    //     j.back() = v->value();
+    // else if (FloatValuePtr v = p)
+    //     j.back() = v->value();
+    // else if (UuIdValuePtr v = p
+    //     j.back() = to_string(v->value();
+    // else if (ObjectValuePtr v = p
+    // {
+    //     json jo = v->value();
+    //     j.back() = jo;
+    // }
+    // else if (VectorValuePtr v = p
+    // {
+    // }
+
+    String s = j.dump(4);
+    std::cout << s;
 }
 
-
-void to_json(json& j, const ObjectPtr& o)
+void to_json(json &j, const PropertyPtr &p)
 {
-	//j = json{ { "name", p.name },{ "address", p.address },{ "age", p.age } };
+    j[p->name()] = p->value();
+    // json jv = p->value();
+    //j = json{ { "name", p.name },{ "address", p.address },{ "age", p.age } };
 }
 
-
-void from_json(const json& j, ObjectPtr& o)
+void to_json(json &j, const ObjectPtr &o)
 {
-	o = Object::make();
-	for (obj::json::const_iterator i = j.begin(); i != j.end(); ++i)
-	{
-		PropertyPtr p = *i;
-		p->name() = i.key();
-		o->properties().push_back(p);
-	}
+    using boost::uuids::to_string;
+    String id = to_string(o->id());
+    j["id"] = id;
+    for (PropertyPtr p : o->properties())
+    {
+        json j_p = p;
+        // j = p;
+    }
+
+    //j = json{ { "name", p.name },{ "address", p.address },{ "age", p.age } };
 }
 
-
-ObjectPtr obj::serialize_json::ReadFromFile(const Path & filePath)
+ObjectPtr obj::serialize_json::ReadFromJson(const json& j)
 {
-	boost::filesystem::ifstream is(filePath);
-	json j;
-	is >> j;
-	ObjectPtr object = j;
-	return object;
+    ObjectPtr object = j;
+    return object;
 }
 
-ObjectPtr obj::serialize_json::ReadFromString(const String & jsonString)
+ObjectPtr obj::serialize_json::ReadFromFile(const Path &filePath)
 {
-	std::istringstream is(jsonString);
-	json j;
-	is >> j;
-	ObjectPtr object = j;
-	return object;
+    boost::filesystem::ifstream is(filePath);
+    json j;
+    is >> j;
+    ObjectPtr object = j;
+    return object;
 }
 
-void obj::serialize_json::WriteToFile(const Path & filePath, ObjectPtr object)
+ObjectPtr obj::serialize_json::ReadFromString(const String &jsonString)
 {
-	boost::filesystem::ofstream os(filePath);
-	json j = object;
-	os << j;
+    std::istringstream is(jsonString);
+    json j;
+    is >> j;
+    ObjectPtr object = j;
+    return object;
+}
+
+void obj::serialize_json::WriteToFile(const Path &filePath, ObjectPtr object)
+{
+    boost::filesystem::ofstream os(filePath);
+    json j = object;
+    os << j;
 }
 
 String obj::serialize_json::WriteToString(ObjectPtr object)
 {
-	std::ostringstream os;
-	json j = object;
-	os << j;
-	return os.str();
+    std::ostringstream os;
+    json j = object;
+    os << j;
+    return os.str();
 }

@@ -2,14 +2,6 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "type": "lldb",
-            "request": "launch",
-            "name": "LLDB Launch",
-            "program": "${workspaceRoot}/bin/${workspaceRootFolderName}.exe",
-            "args": [],
-            "cwd": "${workspaceRoot}"
-        },
-        {
             "type": "PowerShell",
             "request": "launch",
             "name": "PowerShell Launch Current File",
@@ -21,7 +13,7 @@
             "name": "C++ Launch (Windows)",
             "type": "cppdbg",
             "request": "launch",
-            "program": "${workspaceRoot}/bin/${workspaceRootFolderName}.exe",
+            "program": "${workspaceRoot}/bin/Debug/${workspaceRootFolderName}.exe",
             "args": [
                 "0.0.0.0",
                 "80",

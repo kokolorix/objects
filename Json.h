@@ -12,6 +12,7 @@ using json = nlohmann::json;
 
 namespace serialize_json
 {
+ObjectPtr ReadFromJson(const json& j);
 ObjectPtr ReadFromFile(const Path& filePath);
 ObjectPtr ReadFromString(const String& jsonString);
 void WriteToFile(const Path& filePath, ObjectPtr object);

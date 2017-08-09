@@ -27,6 +27,28 @@ int main()
 	PropertyPtr Id = Property::make("Id", UuIdValue::make(GenerateId()));
 	ObjectPtr obj = Object::make(PropertySet{Name, A2E, Pi});
 
+	obj = obj::serialize_json::ReadFromFile(".vscode/tasks.json");
+	
+	obj::json j =
+	{
+		{ "pi", 3.141 },
+		{ "happy", true },
+		{ "name", "Niels" },
+		{ "nothing", nullptr },
+		{ "answer",{
+			{ "everything", 42 }
+		} },
+		{ "list",{ 1, 0, 2 } },
+		{ "object",{
+			{ "currency", "USD" },
+			{ "value", 42.99 }
+		} }
+	};
+	std::string s = j.dump(4);
+
+	obj = obj::serialize_json::ReadFromJson(j);
+	String j_str = obj::serialize_json::WriteToString(obj);
+
 	//int32_t id = *Id->value();
 
 	return 0;

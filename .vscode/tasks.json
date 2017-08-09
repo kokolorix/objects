@@ -27,7 +27,7 @@
 				"${workspaceRoot}/*.cpp",
 				"${workspaceRoot}/web_server/*.cpp",
 				"-o",
-				"${workspaceRoot}/bin/${workspaceRootFolderName}.exe",
+				"${workspaceRoot}/bin/Debug/${workspaceRootFolderName}.exe",
 				"-Llib",
 				"-lws2_32",
 				"-lwsock32",

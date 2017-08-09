@@ -104,6 +104,7 @@ using floatValuePtr = std::shared_ptr<FloatValue>;
 
 using UuIdValue = ValueImpl<UuId>;
 using UuIdValuePtr = std::shared_ptr<UuIdValue>;
+
 using ObjectValue = ValueImpl<ObjectPtr>;
 using ObjectValuePtr = std::shared_ptr<ObjectPtr>;
 
