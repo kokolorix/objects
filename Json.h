@@ -4,19 +4,23 @@
 #include <boost/filesystem.hpp>
 #include "json/json.hpp"
 
+namespace obj
+{
+   namespace fs = boost::filesystem;
+}
 
 namespace obj
 {
-using Path = boost::filesystem::path;
-using json = nlohmann::json;
+using Path = fs::path;
+using Json = nlohmann::json;
 
-namespace serialize_json
+namespace js
 {
-ObjectPtr ReadFromJson(const json& j);
-ObjectPtr ReadFromFile(const Path& filePath);
-ObjectPtr ReadFromString(const String& jsonString);
-json WriteToJson(ObjectPtr object);
-void WriteToFile(const Path& filePath, ObjectPtr object);
-String WriteToString(ObjectPtr object);
-}
-}
+ObjectPtr readJson(const Json& j);
+ObjectPtr readFile(const Path& filePath);
+ObjectPtr readString(const String& jsonString);
+Json writeJson(ObjectPtr object);
+void writeFile(const Path& filePath, ObjectPtr object);
+String writeString(ObjectPtr object);
+}//json
+}//obj

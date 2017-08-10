@@ -19,19 +19,21 @@ boost::uuids::random_generator GenerateId;
 boost::uuids::nil_generator GenerateNullId;
 //boost::uuids::string_generator GenerateIdFromString;
 }
+namespace obj
+{
 using UuId = boost::uuids::uuid;
 
 class Object;
-using ObjectPtr = std::shared_ptr<Object>;
+using ObjectPtr = shared_ptr<Object>;
 
 class Value;
-using ValuePtr = std::shared_ptr<Value>;
+using ValuePtr = shared_ptr<Value>;
 
 template <typename T> class ValueImpl;
 
 class Value : public Thing
 {
- public:
+public:
 	virtual ~Value() {}
 
 	virtual operator String() const { return toString(); }
@@ -59,7 +61,7 @@ class Value : public Thing
 template <typename T>
 class ValueImpl : public Value
 {
- public:
+public:
 	ValueImpl() : _value() {}
 	ValueImpl(T v) : _value(v) {}
 	const T& value() const { return _value; }
@@ -113,16 +115,21 @@ using ObjectValuePtr = std::shared_ptr<ObjectPtr>;
 
 using VectorValue = ValueImpl<std::vector<ValuePtr> >;
 using VectorValuePtr = std::shared_ptr<VectorValue>;
+}
 
 namespace boost
 {
-template<> inline int32_t lexical_cast(const UuIdValue&){ throw ImpossibleCastException(__func__); }
-template<> inline int32_t lexical_cast(const ObjectPtr&){ throw ImpossibleCastException(__func__); }
-template<> inline int32_t lexical_cast(const std::vector<ValuePtr>&){ throw ImpossibleCastException(__func__); }
+using namespace obj;
+template<> inline int32_t lexical_cast(const UuIdValue&) { throw ImpossibleCastException(__func__); }
+template<> inline int32_t lexical_cast(const ObjectPtr&) { throw ImpossibleCastException(__func__); }
+template<> inline int32_t lexical_cast(const std::vector<ValuePtr>&) { throw ImpossibleCastException(__func__); }
 }
 
+namespace obj
+{
 template<typename T>
 inline ValueImpl<T>::operator int32_t () const
 {
 	return boost::lexical_cast<int32_t>(_value);
+}
 }
