@@ -17,6 +17,9 @@
 
 #include "Object.h"
 #include "Json.h"
+namespace Json = obj::serialize_json;
+//using namespace obj::serialize_json;
+using obj::json;
 
 int main()
 {
@@ -27,9 +30,9 @@ int main()
 	PropertyPtr Id = Property::make("Id", UuIdValue::make(GenerateId()));
 	ObjectPtr obj = Object::make(PropertySet{Name, A2E, Pi});
 
-	obj = obj::serialize_json::ReadFromFile(".vscode/tasks.json");
+	obj = Json::ReadFromFile(".vscode/tasks.json");
 	
-	obj::json j =
+	json j1 =
 	{
 		{ "pi", 3.141 },
 		{ "happy", true },
@@ -44,10 +47,14 @@ int main()
 			{ "value", 42.99 }
 		} }
 	};
-	std::string s = j.dump(4);
+	String s1 = j1.dump(4);
 
-	obj = obj::serialize_json::ReadFromJson(j);
-	String j_str = obj::serialize_json::WriteToString(obj);
+	obj = Json::ReadFromJson(j1);
+
+	json j2 = Json::WriteToJson(obj);
+	String s2 = j2.dump(4);
+
+	assert(j1 == j2);
 
 	//int32_t id = *Id->value();
 

@@ -10,6 +10,8 @@ void from_json(const json &j, ValuePtr &v)
         v = Int32Value::make(j.get<int32_t>());
     else if (j.is_string())
         v = StringValue::make(j.get<String>());
+    else if (j.is_number_float())
+        v = FloatValue::make(j.get<float>());
     else if (j.is_object())
     {
         ObjectPtr o = j;
@@ -49,48 +51,43 @@ void from_json(const json &j, ObjectPtr &o)
 
 void to_json(json &j, const ValuePtr &p)
 {
+    using boost::uuids::to_string;
     if (auto v = std::dynamic_pointer_cast<StringValue>(p))
-        j.back() = v->value();
-    // else if (BooleanValuePtr v = p)
-    //     j.back() = v->value();
-    // else if (Int32ValuePtr v = p)
-    //     j.back() = v->value();
-    // else if (FloatValuePtr v = p)
-    //     j.back() = v->value();
-    // else if (UuIdValuePtr v = p
-    //     j.back() = to_string(v->value();
-    // else if (ObjectValuePtr v = p
-    // {
-    //     json jo = v->value();
-    //     j.back() = jo;
-    // }
-    // else if (VectorValuePtr v = p
-    // {
-    // }
-
-    String s = j.dump(4);
-    std::cout << s;
+        j = v->value();
+    else if (auto v = std::dynamic_pointer_cast<BooleanValue>(p))
+        j = v->value();
+    else if (auto v = std::dynamic_pointer_cast<Int32Value>(p))
+        j = v->value();
+    else if (auto v = std::dynamic_pointer_cast<FloatValue>(p))
+        j = v->value();
+    else if (auto v = std::dynamic_pointer_cast<UuIdValue>(p))
+        j = to_string(v->value());
+    else if (auto v = std::dynamic_pointer_cast<ObjectValue>(p))
+        j = v->value();
+	 else if (auto v = std::dynamic_pointer_cast<VectorValue>(p))
+		 std::copy(v->value().begin(), v->value().end(), std::back_inserter(j));
 }
 
 void to_json(json &j, const PropertyPtr &p)
 {
-    j[p->name()] = p->value();
-    // json jv = p->value();
-    //j = json{ { "name", p.name },{ "address", p.address },{ "age", p.age } };
+	json jv = p->value();
+	j[p->name()] = jv;
 }
 
 void to_json(json &j, const ObjectPtr &o)
 {
-    using boost::uuids::to_string;
-    String id = to_string(o->id());
-    j["id"] = id;
-    for (PropertyPtr p : o->properties())
-    {
-        json j_p = p;
-        // j = p;
-    }
-
-    //j = json{ { "name", p.name },{ "address", p.address },{ "age", p.age } };
+	if (o->id() != GenerateNullId())
+	{
+		using boost::uuids::to_string;
+		String id = to_string(o->id());
+		j["id"] = id;
+	}
+	//std::transform(o->properties().begin(), o->properties().end(), std::inserter(j, j.end()), [](PropertyPtr p) {return std::make_pair(p->name(), json(p->value())); });
+	for (PropertyPtr p : o->properties())
+	{
+		json jv = p->value();
+		j[p->name()] = jv;
+	}
 }
 
 ObjectPtr obj::serialize_json::ReadFromJson(const json& j)
@@ -115,6 +112,12 @@ ObjectPtr obj::serialize_json::ReadFromString(const String &jsonString)
     is >> j;
     ObjectPtr object = j;
     return object;
+}
+
+json obj::serialize_json::WriteToJson(ObjectPtr object)
+{
+   json j = object;
+	return j;
 }
 
 void obj::serialize_json::WriteToFile(const Path &filePath, ObjectPtr object)

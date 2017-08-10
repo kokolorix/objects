@@ -38,9 +38,14 @@
 		</Build>
 		<Compiler>
 			<Add option="-Wall" />
+			<Add option="-std=c++0x" />
 			<Add option="-fexceptions" />
 			<Add option="-D_WIN32_WINNT=0x0600" />
+			<Add directory="../boost_1_64_0" />
 		</Compiler>
+		<Linker>
+			<Add directory="C:/Program Files (x86)/CodeBlocks/MinGW/lib" />
+		</Linker>
 		<Unit filename="Json.cpp" />
 		<Unit filename="Json.h" />
 		<Unit filename="Object.h" />

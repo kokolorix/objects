@@ -15,6 +15,7 @@ namespace serialize_json
 ObjectPtr ReadFromJson(const json& j);
 ObjectPtr ReadFromFile(const Path& filePath);
 ObjectPtr ReadFromString(const String& jsonString);
+json WriteToJson(ObjectPtr object);
 void WriteToFile(const Path& filePath, ObjectPtr object);
 String WriteToString(ObjectPtr object);
 }

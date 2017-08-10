@@ -99,7 +99,10 @@ using BooleanValuePtr = std::shared_ptr<BooleanValue>;
 using Int32Value = ValueImpl<int32_t>;
 using Int32ValuePtr = std::shared_ptr<Int32Value>;
 
-using FloatValue = ValueImpl<float>;
+using UInt32Value = ValueImpl<uint32_t>;
+using UInt32ValuePtr = std::shared_ptr<UInt32Value>;
+
+using FloatValue = ValueImpl<double>;
 using floatValuePtr = std::shared_ptr<FloatValue>;
 
 using UuIdValue = ValueImpl<UuId>;
