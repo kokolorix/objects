@@ -4,20 +4,22 @@
 #include <string>
 #include <thread>
 
-#include "web_server/server.hpp"
-
-// #include "xml/rapidxml.hpp"
-// #include "xml/rapidxml_iterators.hpp"
-// using xml_document = rapidxml::xml_document<char>;
-// using xml_node = rapidxml::xml_node<char>;
-// using xml_attribute = rapidxml::xml_attribute<char>;
-// using node_iterator = rapidxml::node_iterator<char>;
-// using attribute_iterator = rapidxml::attribute_iterator<char>;
-
 
 #include "Object.h"
-#include "Json.h"
 using namespace obj;
+
+
+#include "sqlite\sqlite3.h"
+
+int main()
+{
+	//ShellState data;
+
+	return 0;
+}
+
+/*
+#include "Json.h"
 
 int main()
 {
@@ -60,24 +62,13 @@ int main()
 
 	return 0;
 }
+*/
 
 /*
+#include "web_server/server.hpp"
+
 int main(int argc, char* argv[])
 {
-		{ "pi", 3.141 },
-		{ "happy", true },
-		{ "name", "Niels" },
-		{ "nothing", nullptr },
-		{ "answer",{
-			{ "everything", 42 }
-		} },
-		{ "list",{ 1, 0, 2 } },
-		{ "object",{
-			{ "currency", "USD" },
-			{ "value", 42.99 }
-		} }
-	};
-	std::string s = j.dump();
 	try
 	{
 		// Check command line arguments.
@@ -102,3 +93,12 @@ int main(int argc, char* argv[])
 	return 0;
 }
 */
+
+
+// #include "xml/rapidxml.hpp"
+// #include "xml/rapidxml_iterators.hpp"
+// using xml_document = rapidxml::xml_document<char>;
+// using xml_node = rapidxml::xml_node<char>;
+// using xml_attribute = rapidxml::xml_attribute<char>;
+// using node_iterator = rapidxml::node_iterator<char>;
+// using attribute_iterator = rapidxml::attribute_iterator<char>;
