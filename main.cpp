@@ -8,12 +8,15 @@
 #include "Object.h"
 using namespace obj;
 
-
-#include "sqlite\sqlite3.h"
+#pragma warning(push)
+#pragma warning(disable : 4065)
+#include <sqlite_modern_cpp.h>
+#pragma warning(pop)
+using namespace  sqlite;
 
 int main()
 {
-	//ShellState data;
+	database db("objects.db3");
 
 	return 0;
 }
