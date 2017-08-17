@@ -3,6 +3,7 @@
 #include <sstream>
 #include <typeinfo>
 #include <memory>
+#include <functional>
 
 namespace obj
 {
@@ -40,4 +41,19 @@ public:
 };
 
 using ThingPtr = shared_ptr<Thing>;
+
+using ThingCreator = std::function<ThingPtr(void)>;
+class ThingFactory
+{
+public:
+	static ThingFactory& instance();
+	ThingCreator& operator [] (const String& typeName);
+	ThingCreator erase(const String& typeName);
+	ThingPtr create(const String& typeName);
+
+private:
+	ThingFactory();
+	struct Impl;
+	std::unique_ptr<Impl> _pimpl;
+};
 }

@@ -42,6 +42,9 @@
 			<Add option="-fexceptions" />
 			<Add option="-D_WIN32_WINNT=0x0600" />
 			<Add directory="../boost_1_64_0" />
+			<Add directory="json" />
+			<Add directory="sqlite" />
+			<Add directory="xml" />
 		</Compiler>
 		<Linker>
 			<Add directory="C:/Program Files (x86)/CodeBlocks/MinGW/lib" />

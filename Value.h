@@ -36,23 +36,23 @@ class Value : public Thing
 public:
 	virtual ~Value() {}
 
-	virtual operator String() const { return toString(); }
-	virtual operator int32_t() const { throw NotImplementetException(__func__); }
-	virtual operator int64_t() const { throw NotImplementetException(__func__); }
-	virtual operator uint64_t() const { throw NotImplementetException(__func__); }
-	virtual operator uint32_t() const { throw NotImplementetException(__func__); }
-	virtual operator float() const { throw NotImplementetException(__func__); }
-	virtual operator ObjectPtr() const { throw NotImplementetException(__func__); }
+	//virtual operator String() const { return toString(); }
+	//virtual operator int32_t() const { throw NotImplementetException(__func__); }
+	//virtual operator int64_t() const { throw NotImplementetException(__func__); }
+	//virtual operator uint64_t() const { throw NotImplementetException(__func__); }
+	//virtual operator uint32_t() const { throw NotImplementetException(__func__); }
+	//virtual operator float() const { throw NotImplementetException(__func__); }
+	//virtual operator ObjectPtr() const { throw NotImplementetException(__func__); }
 
-	virtual bool isInt32() const { return false; }
-	virtual bool isInt64() const { return false; }
-	virtual bool isUint64() const { return false; }
-	virtual bool isUint32() const { return false; }
-	virtual bool isFloat() const { return false; }
-	virtual bool isObject() const { return false; }
+	//virtual bool isInt32() const { return false; }
+	//virtual bool isInt64() const { return false; }
+	//virtual bool isUint64() const { return false; }
+	//virtual bool isUint32() const { return false; }
+	//virtual bool isFloat() const { return false; }
+	//virtual bool isObject() const { return false; }
 
-	virtual ValuePtr operator [] (size_t index) { throw NotImplementetException(__func__); }
-	virtual ValuePtr operator [] (String name) { throw NotImplementetException(__func__); }
+	//virtual ValuePtr operator [] (size_t index) { throw NotImplementetException(__func__); }
+	//virtual ValuePtr operator [] (String name) { throw NotImplementetException(__func__); }
 
 	template<typename T>
 	static std::shared_ptr<ValueImpl<T> > make(T v);
@@ -71,7 +71,7 @@ public:
 	//template<typename ConvT>
 	//ConvT convert() const { return boost::lexical_cast<ConvT>(_value); }
 
-	virtual operator int32_t() const;// { return convert<int32_t>(_value); }
+	//virtual operator int32_t() const;// { return convert<int32_t>(_value); }
 	//virtual operator int64_t() const { return convert<int64_t>(_value); }
 	//virtual operator uint64_t() const { return convert<uint64_t>(_value); }
 	//virtual operator uint32_t() const { return convert<uint32_t>(_value); }
@@ -127,9 +127,9 @@ template<> inline int32_t lexical_cast(const std::vector<ValuePtr>&) { throw Imp
 
 namespace obj
 {
-template<typename T>
-inline ValueImpl<T>::operator int32_t () const
-{
-	return boost::lexical_cast<int32_t>(_value);
-}
+//template<typename T>
+//inline ValueImpl<T>::operator int32_t () const
+//{
+//	return boost::lexical_cast<int32_t>(_value);
+//}
 }

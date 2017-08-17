@@ -161,6 +161,8 @@
   <ItemGroup>
     <ClCompile Include=".\main.cpp" />
     <ClCompile Include="Json.cpp" />
+    <ClCompile Include="Thing.cpp" />
+    <ClCompile Include="Value.cpp" />
     <ClCompile Include="web_server\connection.cpp" />
     <ClCompile Include="web_server\connection_manager.cpp" />
     <ClCompile Include="web_server\mime_types.cpp" />
