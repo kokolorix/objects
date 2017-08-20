@@ -48,6 +48,9 @@
     <ClCompile Include="Value.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="SqLite.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Value.h">
@@ -105,6 +108,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Json.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="SqLite.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

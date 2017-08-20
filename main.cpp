@@ -16,14 +16,6 @@ using namespace  sqlite;
 
 int main()
 {
-	database db("objects.db3");
-
-	int count = 0;
-	db << "select count(*) from object where name='RootType'" >> count;
-	if (count == 0)
-	{
-		db << "insert into object (name,type) values (?,?);" << u"RootType" << 9;
-	}
 
 	return 0;
 }

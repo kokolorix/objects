@@ -4,17 +4,25 @@
 #include <typeinfo>
 #include <memory>
 #include <functional>
-
 namespace obj
 {
 using ::std::istringstream;
 using ::std::ostringstream;
 using ::std::shared_ptr;
+
+using String = std::string;
 }
+
+#include <boost/filesystem.hpp>
+namespace obj
+{
+	namespace fs = boost::filesystem;
+	using Path = fs::path;
+}
+
 
 namespace obj
 {
-using String = std::string;
 // using Exception = std::exception;
 struct Exception : public std::exception
 {

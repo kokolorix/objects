@@ -21,18 +21,18 @@ public:
 	Object() : _id(GenerateNullId()) {}
 	virtual ~Object() {}
 	virtual operator String  () const { return toString(); }
-	ValuePtr operator [] (String name)
+	Value& operator [] (String name)
+	{
+		return *at(name);
+	}
+	ValuePtr at(const String& name)
 	{
 		PropertyVector::iterator it = std::find_if(_properties.begin(), _properties.end(), [name](PropertyPtr p) {return p->name() == name; });
 		if (it == _properties.end())
 			throw NotFoundException(__func__);
-		//Property search(name);
-		//std::shared_ptr<Property> searchPtr(&search, [](Property*) {});
-		//auto it = _properties.find(searchPtr);
-		//if(it == _properties.end())
-		//	throw NotImplementetException(__func__);
 		PropertyPtr prop = *it;
 		return prop->value();
+
 	}
 
 	const ObjectId& id() const { return _id; }

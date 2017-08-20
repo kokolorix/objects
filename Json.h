@@ -1,17 +1,10 @@
 #pragma once
 
 #include "Object.h"
-#include <boost/filesystem.hpp>
 #include "json/json.hpp"
 
 namespace obj
 {
-   namespace fs = boost::filesystem;
-}
-
-namespace obj
-{
-using Path = fs::path;
 using Json = nlohmann::json;
 
 namespace js
