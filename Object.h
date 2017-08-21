@@ -21,10 +21,10 @@ public:
 	Object() : _id(GenerateNullId()) {}
 	virtual ~Object() {}
 	virtual operator String  () const { return toString(); }
-	Value& operator [] (String name)
-	{
-		return *at(name);
-	}
+	//Value& operator [] (String name)
+	//{
+	//	return *at(name);
+	//}
 	ValuePtr at(const String& name)
 	{
 		PropertyVector::iterator it = std::find_if(_properties.begin(), _properties.end(), [name](PropertyPtr p) {return p->name() == name; });
@@ -49,8 +49,13 @@ private:
 	ObjectId _id;
 	PropertyVector _properties;
 };
-
 //using ObjectValue = ValueImpl<ObjectPtr>;
 //using ObjectValuePtr = std::shared_ptr<ObjectValue>;
+inline ValuePtr ObjectPtr::operator[](String name)
+{
+	return (*this)->at("id");
 }
+}
+
+
 

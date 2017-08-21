@@ -28,7 +28,7 @@ ObjectPtr obj::db::readObject(const Path & filePath, const String & where)
 
 void obj::db::writeObject(const Path & filePath, ObjectPtr object)
 {
-	int32_t id = *object->at("id");
+	int32_t id = object["id"];
 	database db(filePath.string());
 
 }

@@ -23,14 +23,29 @@ namespace obj
 {
 using UuId = boost::uuids::uuid;
 
-class Object;
-using ObjectPtr = shared_ptr<Object>;
-using ObjectPtrVector = std::vector<ObjectPtr>;
 
 class Value;
-using ValuePtr = shared_ptr<Value>;
+//using ValuePtr = shared_ptr<Value>;
+struct ValuePtr : public shared_ptr<Value>
+{
+	using Base = shared_ptr<Value>;
+	using Base::Base;
+	//ValuePtr operator [] (String name);
+	operator int32_t() const;
+};
 using ValuePtrVector = std::vector<ValuePtr>;
 template <typename T> class ValueImpl;
+
+class Object;
+// using ObjectPtr = shared_ptr<Object>;
+struct ObjectPtr : public shared_ptr<Object>
+{
+	using Base = shared_ptr<Object>;
+	using Base::Base;
+	ValuePtr operator [] (String name);
+};
+
+using ObjectPtrVector = std::vector<ObjectPtr>;
 
 class Value : public Thing
 {

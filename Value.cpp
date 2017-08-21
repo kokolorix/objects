@@ -18,3 +18,10 @@ bool registerCreators()
 	f[BOOST_STRINGIZE(VectorValue)] = std::bind(&VectorValue::make, std::vector<ValuePtr>());
 	return true;
 }
+
+obj::ValuePtr::operator int32_t() const
+{
+	if (auto p = std::dynamic_pointer_cast<StringValue>(*this))
+		return boost::lexical_cast<int32_t>(p->value());
+	throw NotImplementetException(__func__);
+}
