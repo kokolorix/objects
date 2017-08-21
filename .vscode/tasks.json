@@ -42,7 +42,7 @@
 					"absolute"
 				],
 				"pattern": {
-					"regexp": "^(.*):(\\d+):(\\d+):\\s+(warning|error):\\s+(.*)$",
+					"regexp": "^(.*):(//d+):(//d+)://s+(warning|error)://s+(.*)$",
 					"file": 1,
 					"line": 2,
 					"column": 3,
@@ -50,6 +50,30 @@
 					"message": 5
 				}
 			}
+		},
+		{
+			"taskName": "Build UnitTest",
+			"isBackground": true,
+			"type": "shell",
+			"group": "build",
+			"presentation": {
+				"reveal": "always",
+				"panel": "shared"
+			},
+			"options": {
+				"cwd": "${workspaceRoot}",
+				"env": {
+					"Path": "C:/Program Files (x86)/Microsoft Visual Studio/2017/Community/MSBuild/15.0/Bin ;${env:Path}"				}
+			},
+			"command": "msbuild",
+			"args": [
+				"/p","Config=Debug",
+				"/p","Platform=x64",
+				"/t","Build",
+				"UnitTest/UnitTest.vcxproj",
+				""
+			],
+			"problemMatcher": "$msCompile"
 		}
 	]
 }

@@ -1,3 +1,4 @@
+#include "stdafx.h"
 #include "Value.h"
 #include <boost/preprocessor.hpp>
 using namespace obj;
@@ -23,5 +24,5 @@ obj::ValuePtr::operator int32_t() const
 {
 	if (auto p = std::dynamic_pointer_cast<StringValue>(*this))
 		return boost::lexical_cast<int32_t>(p->value());
-	throw NotImplementetException(__func__);
+	throw ImpossibleCastException(__func__);
 }

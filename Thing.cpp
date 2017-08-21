@@ -1,3 +1,4 @@
+#include "stdafx.h"
 #include "Thing.h"
 #include <map>
 using namespace obj;

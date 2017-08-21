@@ -1,3 +1,4 @@
+#include "stdafx.h"
 #include "SqLite.h"
 
 #pragma warning(push)

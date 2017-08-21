@@ -130,7 +130,7 @@ using UuIdValuePtr = std::shared_ptr<UuIdValue>;
 using ObjectValue = ValueImpl<ObjectPtr>;
 using ObjectValuePtr = std::shared_ptr<ObjectPtr>;
 
-using VectorValue = ValueImpl<std::vector<ValuePtr> >;
+using VectorValue = ValueImpl<ValuePtrVector>;
 using VectorValuePtr = std::shared_ptr<VectorValue>;
 }
 

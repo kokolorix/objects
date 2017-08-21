@@ -1,3 +1,4 @@
+#include "stdafx.h"
 #include "Json.h"
 
 namespace obj
@@ -95,45 +96,45 @@ void to_json(Json &j, const ObjectPtr &o)
 
 obj::ObjectPtr obj::js::readJson(const Json& j)
 {
-    ObjectPtr object = j;
-    return object;
+	 ObjectPtr object = j;
+	 return object;
 }
 
 obj::ObjectPtr obj::js::readFile(const Path &filePath)
 {
-    boost::filesystem::ifstream is(filePath);
-    Json j;
-    is >> j;
-    ObjectPtr object = j;
-    return object;
+	 boost::filesystem::ifstream is(filePath);
+	 Json j;
+	 is >> j;
+	 ObjectPtr object = j;
+	 return object;
 }
 
 obj::ObjectPtr obj::js::readString(const String &jsonString)
 {
-    istringstream is(jsonString);
-    Json j;
-    is >> j;
-    ObjectPtr object = j;
-    return object;
+	 istringstream is(jsonString);
+	 Json j;
+	 is >> j;
+	 ObjectPtr object = j;
+	 return object;
 }
 
 obj::Json obj::js::writeJson(ObjectPtr object)
 {
-   Json j = object;
+	Json j = object;
 	return j;
 }
 
 void obj::js::writeFile(const Path &filePath, ObjectPtr object)
 {
-    boost::filesystem::ofstream os(filePath);
-    Json j = object;
-    os << j;
+	 boost::filesystem::ofstream os(filePath);
+	 Json j = object;
+	 os << j;
 }
 
 obj::String obj::js::writeString(ObjectPtr object)
 {
-    ostringstream os;
-    Json j = object;
-    os << j;
-    return os.str();
+	 ostringstream os;
+	 Json j = object;
+	 os << j;
+	 return os.str();
 }
