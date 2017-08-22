@@ -2,6 +2,18 @@
     "version": "0.2.0",
     "configurations": [
         {
+            "name": "(Windows) Launch",
+            "type": "cppvsdbg",
+            "request": "launch",
+            "program": "${workspaceRoot}\\win32\\Debug\\UnitTest.exe",
+            "args": [],
+            "stopAtEntry": false,
+            "cwd": "${workspaceRoot}",
+            "environment": [],
+            "symbolSearchPath": "srv*${workspaceRoot}\\win32\\Debug*https://msdl.microsoft.com/download/symbols",
+            "externalConsole": false
+        },
+        {
             "type": "PowerShell",
             "request": "launch",
             "name": "PowerShell Launch Current File",

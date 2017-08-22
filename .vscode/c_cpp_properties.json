@@ -1,7 +1,7 @@
 {
     "configurations": [
         {
-            "name": "Win32",
+            "name": "MingW",
             "intelliSenseMode": "clang-x64",
             "includePath": [
                 "${workspaceRoot}",
@@ -26,6 +26,55 @@
                     "C:/Program Files (x86)/CodeBlcks/MinGW/lib/gcc/mingw32/4.9.2/include",
                     "C:/Program Files (x86)/CodeBlocks/MinGW/lib/gcc/mingw32/4.9.2/include-fixed",
                     "C:/Program Files (x86)/CodeBlocks/MinGW/include/*"
+                ],
+                "limitSymbolsToIncludedHeaders": true,
+                "databaseFilename": ""
+            }
+        },
+        {
+            "name": "VC++",
+            "intelliSenseMode": "msvc-x64",
+            "includePath": [
+                "${workspaceRoot}",
+                "${workspaceRoot}/json",
+                "${workspaceRoot}/sqlite",
+                "${workspaceRoot}/UnitTest",
+                "${workspaceRoot}/RESTServer",
+                "D:/Projects/boost_1_64_0",
+                "C:/Program Files (x86)/Microsoft Visual Studio/2017/Community/VC/Tools/MSVC/14.11.25503/include",
+                "C:/Program Files (x86)/Microsoft Visual Studio/2017/Community/VC/Tools/MSVC/14.11.25503/atlmfc/include",
+                "C:/Program Files (x86)/Microsoft Visual Studio/2017/Community/VC/Auxiliary/VS/include",
+                "C:/Program Files (x86)/Windows Kits/10/Include/10.0.15063.0/ucrt",
+                "C:/Program Files (x86)/Windows Kits/10/Include/10.0.15063.0/um",
+                "C:/Program Files (x86)/Windows Kits/10/Include/10.0.15063.0/shared",
+                "C:/Program Files (x86)/Windows Kits/10/Include/10.0.15063.0/winrt",
+                "Include/um",
+                ""
+            ],
+            "defines": [
+                "_DEBUG",
+                "_UNICODE",
+                "_CONSOLE",
+                "_MSVER=1911",
+                ""
+            ],
+            "browse": {
+                "path": [
+                    "${workspaceRoot}",
+                    "${workspaceRoot}/json",
+                    "${workspaceRoot}/sqlite",
+                    "${workspaceRoot}/UnitTest",
+                    "${workspaceRoot}/RESTServer",
+                    "D:/Projects/boost_1_64_0",
+                    "C:/Program Files (x86)/Microsoft Visual Studio/2017/Community/VC/Tools/MSVC/14.11.25503/include",
+                    "C:/Program Files (x86)/Microsoft Visual Studio/2017/Community/VC/Tools/MSVC/14.11.25503/atlmfc/include",
+                    "C:/Program Files (x86)/Microsoft Visual Studio/2017/Community/VC/Auxiliary/VS/include",
+                    "C:/Program Files (x86)/Windows Kits/10/Include/10.0.15063.0/ucrt",
+                    "C:/Program Files (x86)/Windows Kits/10/Include/10.0.15063.0/um",
+                    "C:/Program Files (x86)/Windows Kits/10/Include/10.0.15063.0/shared",
+                    "C:/Program Files (x86)/Windows Kits/10/Include/10.0.15063.0/winrt",
+                    "Include/um",
+                    ""
                 ],
                 "limitSymbolsToIncludedHeaders": true,
                 "databaseFilename": ""

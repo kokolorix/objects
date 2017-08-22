@@ -53,7 +53,7 @@
 		},
 		{
 			"taskName": "Build UnitTest",
-			"isBackground": true,
+			"isBackground": false,
 			"type": "shell",
 			"group": "build",
 			"presentation": {
@@ -63,14 +63,16 @@
 			"options": {
 				"cwd": "${workspaceRoot}",
 				"env": {
-					"Path": "C:/Program Files (x86)/Microsoft Visual Studio/2017/Community/MSBuild/15.0/Bin ;${env:Path}"				}
+					"Path": "C:/Program Files (x86)/Microsoft Visual Studio/2017/Community/MSBuild/15.0/Bin;${env:Path}"
+				}
 			},
 			"command": "msbuild",
 			"args": [
-				"/p","Config=Debug",
-				"/p","Platform=x64",
-				"/t","Build",
-				"UnitTest/UnitTest.vcxproj",
+				"/p:Config=Debug",
+				"/p:Platform=x64",
+				"/t:Build",
+				"/m:4",
+				"${workspaceRoot}/UnitTest/UnitTest.vcxproj",
 				""
 			],
 			"problemMatcher": "$msCompile"
