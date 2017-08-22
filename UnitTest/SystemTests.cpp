@@ -23,7 +23,7 @@ obj::TestResult obj::Test::SystemTests::runTest()
 	PropertyPtr Id = Property::make("Id", UuIdValue::make(GenerateId()));
 	ObjectPtr obj = Object::make(PropertySet{ Name, A2E, Pi });
 
-	obj = js::readFile(".vscode/tasks.json");
+	obj = js::readFile("../.vscode/tasks.json");
 
 	Json j1 =
 	{

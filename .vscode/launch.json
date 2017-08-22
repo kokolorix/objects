@@ -5,12 +5,12 @@
             "name": "(Windows) Launch",
             "type": "cppvsdbg",
             "request": "launch",
-            "program": "${workspaceRoot}\\win32\\Debug\\UnitTest.exe",
+            "program": "${workspaceRoot}\\x64\\Debug\\UnitTest.exe",
             "args": [],
             "stopAtEntry": false,
             "cwd": "${workspaceRoot}",
             "environment": [],
-            "symbolSearchPath": "srv*${workspaceRoot}\\win32\\Debug*https://msdl.microsoft.com/download/symbols",
+            "symbolSearchPath": "srv*${workspaceRoot}\\x64\\Debug*https://msdl.microsoft.com/download/symbols",
             "externalConsole": false
         },
         {
