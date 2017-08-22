@@ -1,12 +1,12 @@
 // UnitTest.cpp : Defines the entry point for the console application.
 //
 #include "stdafx.h"
-
-#include "stdafx.h"
-
+#include "Test.h"
+using namespace obj;
 
 int main()
 {
-    return 0;
+    TestResult r = runTests();
+    return static_cast<int>(r);
 }
 
