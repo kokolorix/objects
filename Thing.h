@@ -9,6 +9,7 @@ namespace obj
 using ::std::istringstream;
 using ::std::ostringstream;
 using ::std::shared_ptr;
+using ::std::make_shared;
 
 using String = std::string;
 }

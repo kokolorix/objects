@@ -5,57 +5,63 @@
 
 namespace obj
 {
-//class Object;
-//using ObjectPtr = shared_ptr<Object>;
-
-using ObjectId = boost::uuids::uuid;
-using ObjectTypeId = boost::uuids::uuid;
-
 class Object : public Thing
 {
-public:
-	template<class PropertyListT>
-	Object(ObjectId id, PropertyListT p) : _id(id), _properties(p.begin(), p.end()) {}
-	template<class PropertyListT>
-	Object(PropertyListT p) : Object(GenerateId(), p) {}
-	Object() : _id(GenerateNullId()) {}
+ protected:
+	 Object() {};
+	template <class PropertyListT>
+	Object(PropertyListT p) : _properties(p.begin(), p.end()) {}
 	virtual ~Object() {}
-	virtual operator String  () const { return toString(); }
-	//Value& operator [] (String name)
-	//{
-	//	return *at(name);
-	//}
-	ValuePtr at(const String& name)
+	 friend class std::_Ref_count_obj<Object>;
+
+ public:
+	virtual operator String() const { return toString(); }
+
+	ValuePtr at(const String &name)
 	{
-		PropertyVector::iterator it = std::find_if(_properties.begin(), _properties.end(), [name](PropertyPtr p) {return p->name() == name; });
+		PropertyVector::iterator it = std::find_if(_properties.begin(), _properties.end(), [name](PropertyPtr p) { return p->name() == name; });
 		if (it == _properties.end())
-			throw NotFoundException(__func__);
+			return NothingValue<Unknown>::make();
 		PropertyPtr prop = *it;
 		return prop->value();
-
 	}
 
-	const ObjectId& id() const { return _id; }
-	ObjectId& id() { return _id; }
-	PropertyVector& properties() { return _properties; }
-	const PropertyVector& properties() const { return _properties; }
+	PropertyVector &properties() { return _properties; }
+	const PropertyVector &properties() const { return _properties; }
 
-	static ObjectPtr make() { return std::make_shared<Object>(); }
+	static ObjectPtr make();
 	template <class PropertyListT>
-	static ObjectPtr make(ObjectId id, PropertyListT p) { return std::make_shared<Object>(id, p); }
-	template<class PropertyListT>
-	static ObjectPtr make(PropertyListT p) { return std::make_shared<Object>(GenerateId(), p); }
-private:
-	ObjectId _id;
+	static ObjectPtr make(PropertyListT p);
+
+ private:
 	PropertyVector _properties;
 };
-//using ObjectValue = ValueImpl<ObjectPtr>;
-//using ObjectValuePtr = std::shared_ptr<ObjectValue>;
-inline ValuePtr ObjectPtr::operator[](String name)
+
+inline ValuePtr ObjectPtr::operator[](String name) { return (*this)->at(name); }
+
+template <typename IdT = UuId>
+class ObjectImpl : public Object
 {
-	return (*this)->at("id");
+ public:
+	ObjectImpl() : Object({"id", generateNullId()})
+	{
+	}
+	template <class PropertyListT>
+	ObjectImpl(PropertyListT p) : Object(p)
+	{
+	}
+	template <class PropertyListT>
+	ObjectImpl(const IdT &id, PropertyListT p) : Object(p) {}
+};
+
+inline ObjectPtr Object::make()
+{
+	return std::make_shared<Object>();
+}
+
+template <class PropertyListT>
+inline ObjectPtr Object::make(PropertyListT p)
+{
+	return std::make_shared<Object>(p);
 }
 }
-
-
-

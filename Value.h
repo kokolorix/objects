@@ -11,24 +11,19 @@
 #ifdef __MINGW32__
 #pragma GCC diagnostic pop
 #endif
-#include <boost/lexical_cast.hpp>
 
-namespace
-{
-boost::uuids::random_generator GenerateId;
-boost::uuids::nil_generator GenerateNullId;
-//boost::uuids::string_generator GenerateIdFromString;
-}
 namespace obj
 {
 using UuId = boost::uuids::uuid;
+extern boost::uuids::random_generator generateId;
+extern boost::uuids::nil_generator generateNullId;
+extern boost::uuids::string_generator generateIdFromString;
 
 
 class Value;
-//using ValuePtr = shared_ptr<Value>;
-struct ValuePtr : public shared_ptr<Value>
+struct ValuePtr : public shared_ptr<const Value>
 {
-	using Base = shared_ptr<Value>;
+	using Base = shared_ptr<const Value>;
 	using Base::Base;
 	//ValuePtr operator [] (String name);
 	operator int32_t() const;
@@ -37,7 +32,6 @@ using ValuePtrVector = std::vector<ValuePtr>;
 template <typename T> class ValueImpl;
 
 class Object;
-// using ObjectPtr = shared_ptr<Object>;
 struct ObjectPtr : public shared_ptr<Object>
 {
 	using Base = shared_ptr<Object>;
@@ -49,51 +43,37 @@ using ObjectPtrVector = std::vector<ObjectPtr>;
 
 class Value : public Thing
 {
-public:
+	friend class std::_Ref_count_obj<Value>;
+protected:
 	virtual ~Value() {}
-
-	virtual operator String() const { return toString(); }
-	virtual operator int32_t() const { throw NotImplementetException(__func__); }
-	virtual operator int64_t() const { throw NotImplementetException(__func__); }
-	virtual operator uint64_t() const { throw NotImplementetException(__func__); }
-	virtual operator uint32_t() const { throw NotImplementetException(__func__); }
-	virtual operator float() const { throw NotImplementetException(__func__); }
-	virtual operator ObjectPtr() const { throw NotImplementetException(__func__); }
-
-	//virtual bool isInt32() const { return false; }
-	//virtual bool isInt64() const { return false; }
-	//virtual bool isUint64() const { return false; }
-	//virtual bool isUint32() const { return false; }
-	//virtual bool isFloat() const { return false; }
-	//virtual bool isObject() const { return false; }
-
-	//virtual ValuePtr operator [] (size_t index) { throw NotImplementetException(__func__); }
-	//virtual ValuePtr operator [] (String name) { throw NotImplementetException(__func__); }
-
+public:
 	template<typename T>
 	static std::shared_ptr<ValueImpl<T> > make(T v);
 };
 
+class Unknown {};
+template <typename T = Unknown>
+class NothingValue : public Value
+{
+public:
+	static std::shared_ptr<NothingValue<T>> make()
+	{
+		return std::make_shared<NothingValue<T>>();
+	}
+};
+using NothingValuePtr = std::shared_ptr<NothingValue<Unknown>>;
+
 template <typename T>
 class ValueImpl : public Value
 {
-public:
+	friend class std::_Ref_count_obj<ValueImpl>;
+protected:
 	ValueImpl() : _value() {}
 	ValueImpl(T v) : _value(v) {}
+	virtual ~ValueImpl() {}
+public:
 	const T& value() const { return _value; }
 	T& value() { return _value; }
-	//virtual operator T  () const { return _value; }
-
-	template<typename ConvT>
-	ConvT convert() const;// { return boost::lexical_cast<ConvT>(_value); }
-
-	virtual operator int32_t() const { return convert<int32_t>(); }
-	virtual operator int64_t() const { return convert<int64_t>(); }
-	virtual operator uint64_t() const { return convert<uint64_t>(); }
-	virtual operator uint32_t() const { return convert<uint32_t>(); }
-	virtual operator float() const { return convert<float>(); }
-	//virtual operator double() const { return convert<double>(); }
-	//virtual operator ObjectPtr() const { return convert<ObjectPtr>(); }
 
 	static std::shared_ptr<ValueImpl<T>> make(T v)
 	{
@@ -109,76 +89,27 @@ inline std::shared_ptr<ValueImpl<T>> Value::make(T v)
 	return std::make_shared<ValueImpl<T>>(v);
 }
 
-using StringValue = ValueImpl<String>;
+using StringValue = const ValueImpl<String>;
 using StringValuePtr = std::shared_ptr<StringValue>;
 
-using BooleanValue = ValueImpl<bool>;
+using BooleanValue = const ValueImpl<bool>;
 using BooleanValuePtr = std::shared_ptr<BooleanValue>;
 
-using Int32Value = ValueImpl<int32_t>;
+using Int32Value = const ValueImpl<int32_t>;
 using Int32ValuePtr = std::shared_ptr<Int32Value>;
 
-using UInt32Value = ValueImpl<uint32_t>;
+using UInt32Value = const ValueImpl<uint32_t>;
 using UInt32ValuePtr = std::shared_ptr<UInt32Value>;
 
-using FloatValue = ValueImpl<double>;
+using FloatValue = const ValueImpl<double>;
 using floatValuePtr = std::shared_ptr<FloatValue>;
 
-using UuIdValue = ValueImpl<UuId>;
+using UuIdValue = const ValueImpl<UuId>;
 using UuIdValuePtr = std::shared_ptr<UuIdValue>;
 
-using ObjectValue = ValueImpl<ObjectPtr>;
+using ObjectValue = const ValueImpl<ObjectPtr>;
 using ObjectValuePtr = std::shared_ptr<ObjectPtr>;
 
-using VectorValue = ValueImpl<ValuePtrVector>;
+using VectorValue = const ValueImpl<ValuePtrVector>;
 using VectorValuePtr = std::shared_ptr<VectorValue>;
-}
-
-namespace boost
-{
-using namespace obj;
-template<> inline int32_t lexical_cast(const UuIdValue&) { throw ImpossibleCastException(__func__); }
-template<> inline int32_t lexical_cast(const ObjectPtr&) { throw ImpossibleCastException(__func__); }
-template<> inline int32_t lexical_cast(const std::vector<ValuePtr>&) { throw ImpossibleCastException(__func__); }
-template<> inline uint32_t lexical_cast(const UuIdValue&) { throw ImpossibleCastException(__func__); }
-template<> inline uint32_t lexical_cast(const ObjectPtr&) { throw ImpossibleCastException(__func__); }
-template<> inline uint32_t lexical_cast(const std::vector<ValuePtr>&) { throw ImpossibleCastException(__func__); }
-template<> inline int64_t lexical_cast(const UuIdValue&) { throw ImpossibleCastException(__func__); }
-template<> inline int64_t lexical_cast(const ObjectPtr&) { throw ImpossibleCastException(__func__); }
-template<> inline int64_t lexical_cast(const std::vector<ValuePtr>&) { throw ImpossibleCastException(__func__); }
-template<> inline uint64_t lexical_cast(const UuIdValue&) { throw ImpossibleCastException(__func__); }
-template<> inline uint64_t lexical_cast(const ObjectPtr&) { throw ImpossibleCastException(__func__); }
-template<> inline uint64_t lexical_cast(const std::vector<ValuePtr>&) { throw ImpossibleCastException(__func__); }
-template<> inline float lexical_cast(const UuIdValue&) { throw ImpossibleCastException(__func__); }
-template<> inline float lexical_cast(const ObjectPtr&) { throw ImpossibleCastException(__func__); }
-template<> inline float lexical_cast(const std::vector<ValuePtr>&) { throw ImpossibleCastException(__func__); }
-
-//template<> inline ObjectPtr lexical_cast(const UuIdValue&) { throw ImpossibleCastException(__func__); }
-//template<> inline ObjectPtr lexical_cast(ObjectPtr) { throw ImpossibleCastException(__func__); }
-//template<> inline ObjectPtr lexical_cast(const std::vector<ValuePtr>&) { throw ImpossibleCastException(__func__); }
-//template<> inline ObjectPtr lexical_cast(const int32_t&) { throw ImpossibleCastException(__func__); }
-//template<> inline ObjectPtr lexical_cast(const uint32_t&) { throw ImpossibleCastException(__func__); }
-//template<> inline ObjectPtr lexical_cast(const int64_t&) { throw ImpossibleCastException(__func__); }
-//template<> inline ObjectPtr lexical_cast(const uint64_t&) { throw ImpossibleCastException(__func__); }
-}
-
-namespace obj
-{
-template<typename T>
-template<typename ConvT>
-inline ConvT ValueImpl<T>::convert() const
-{
-	return boost::lexical_cast<ConvT>(_value);
-}
-template<>
-template<>
-inline ObjectPtr ValueImpl<UuIdValue>::convert() const
-{
-	throw ImpossibleCastException(__func__);
-}
-//template<typename T>
-//inline ValueImpl<T>::operator int32_t () const
-//{
-//	return boost::lexical_cast<int32_t>(_value);
-//}
 }

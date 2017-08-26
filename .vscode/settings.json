@@ -45,7 +45,8 @@
         "valarray": "cpp",
         "bitset": "cpp",
         "string": "cpp",
-        "vector": "cpp"
+        "vector": "cpp",
+        "xlocale": "cpp"
     },
 "editor.tabSize": 3
 }

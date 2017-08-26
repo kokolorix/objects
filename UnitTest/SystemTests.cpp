@@ -13,14 +13,13 @@ namespace
 	bool test = Test::addTestCase(make_shared<Test::SystemTests>(), "SystemTests");
 }
 
-
 obj::TestResult obj::Test::SystemTests::runTest()
 {
 	ValuePtr a2e = Value::make(42);
 	PropertyPtr Name = Property::make("Name", StringValue::make("TheFirstObject"));
 	PropertyPtr A2E = Property::make("AnswerToEverything", a2e);
 	PropertyPtr Pi = Property::make("Pi", FloatValue::make(3.14f));
-	PropertyPtr Id = Property::make("Id", UuIdValue::make(GenerateId()));
+	PropertyPtr Id = Property::make("Id", UuIdValue::make(generateId()));
 	ObjectPtr obj = Object::make(PropertySet{ Name, A2E, Pi });
 
 	obj = js::readFile("../.vscode/tasks.json");
@@ -49,7 +48,7 @@ obj::TestResult obj::Test::SystemTests::runTest()
 	Json j2 = js::writeJson(obj);
 	String s2 = j2.dump(4);
 
-	//assert(j1 == j2);
+	assert(j1 == j2);
 
 	//int32_t id = *Id->value();
 

@@ -23,20 +23,19 @@ void from_json(const Json &j, ValuePtr &v)
 
 void from_json(const Json &j, PropertyPtr &p)
 {
-	p = Property::make(String());
+	auto p1 = make_shared<Property>();
 
 	if (j.is_array())
 	{
-		VectorValuePtr v = VectorValue::make(std::vector<ValuePtr>());
-
+		std::vector<ValuePtr> v;
 		for (Json::const_iterator i = j.begin(); i != j.end(); ++i)
-			v->value().push_back(*i);
+			v.push_back(*i);
 
-		p->value() = v;
+		p1->value() = VectorValue::make(v);
 	}
 	else
 	{
-		p->value() = j;
+		p1->value() = j;
 	}
 }
 
@@ -78,12 +77,12 @@ void to_json(Json &j, const PropertyPtr &p)
 
 void to_json(Json &j, const ObjectPtr &o)
 {
-	if (o->id() != GenerateNullId())
-	{
-		using boost::uuids::to_string;
-		String id = to_string(o->id());
-		j["id"] = id;
-	}
+	//if (o->id() != GenerateNullId())
+	//{
+	//	using boost::uuids::to_string;
+	//	String id = to_string(o->id());
+	//	j["id"] = id;
+	//}
 	//std::transform(o->properties().begin(), o->properties().end(), std::inserter(j, j.end()), [](PropertyPtr p) {return std::make_pair(p->name(), Json(p->value())); });
 	for (PropertyPtr p : o->properties())
 	{

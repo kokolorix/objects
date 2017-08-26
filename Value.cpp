@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "Value.h"
 #include <boost/preprocessor.hpp>
+#include <boost/lexical_cast.hpp>
 using namespace obj;
 bool registerCreators();
 bool intialized = registerCreators();
@@ -14,15 +15,19 @@ bool registerCreators()
 	f[BOOST_STRINGIZE(Int32Value)] = std::bind(&Int32Value::make, 0);
 	f[BOOST_STRINGIZE(UInt32Value)] = std::bind(&UInt32Value::make, 0);
 	f[BOOST_STRINGIZE(FloatValue)] = std::bind(&FloatValue::make, 0.0);
-	f[BOOST_STRINGIZE(UuIdValue)] = std::bind(&UuIdValue::make, GenerateNullId());
+	f[BOOST_STRINGIZE(UuIdValue)] = std::bind(&UuIdValue::make, generateNullId());
 	f[BOOST_STRINGIZE(ObjectValue)] = std::bind(&ObjectValue::make, ObjectPtr());
 	f[BOOST_STRINGIZE(VectorValue)] = std::bind(&VectorValue::make, std::vector<ValuePtr>());
 	return true;
 }
 
+boost::uuids::random_generator obj::generateId;
+boost::uuids::nil_generator obj::generateNullId;
+boost::uuids::string_generator obj::generateIdFromString;
+
 obj::ValuePtr::operator int32_t() const
 {
-	if (auto p = std::dynamic_pointer_cast<StringValue>(*this))
+	if (auto p = std::dynamic_pointer_cast<const StringValue>(*this))
 		return boost::lexical_cast<int32_t>(p->value());
 	throw ImpossibleCastException(__func__);
 }
