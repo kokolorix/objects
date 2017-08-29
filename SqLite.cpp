@@ -24,12 +24,26 @@ ObjectPtrVector obj::db::readObjects(const Path & filePath, const String & where
 
 ObjectPtr obj::db::readObject(const Path & filePath, const String & where)
 {
+	database db(filePath.string());
+
 	return ObjectPtr();
 }
 
 void obj::db::writeObject(const Path & filePath, ObjectPtr object)
 {
-	int32_t id = object["id"];
 	database db(filePath.string());
+
+	Int32ValuePtr pId = dynamic_pointer_cast<Int32Value>(object["id"]);
+	int id = 0;
+	if (pId)
+		id = pId->value();
+	else
+		db << "select max(id) from object" >> id;
+
+	String name = object["name"];
+
+	id = (id > 1000) ? id + 1 : 1001;
+	db << "insert into object (id,name,type) values (?,?,?);" << id << name << 3;
+
 
 }

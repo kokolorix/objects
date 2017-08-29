@@ -23,7 +23,7 @@ void from_json(const Json &j, ValuePtr &v)
 
 void from_json(const Json &j, PropertyPtr &p)
 {
-	auto p1 = make_shared<Property>();
+	auto _p = make_shared<Property>();
 
 	if (j.is_array())
 	{
@@ -31,12 +31,13 @@ void from_json(const Json &j, PropertyPtr &p)
 		for (Json::const_iterator i = j.begin(); i != j.end(); ++i)
 			v.push_back(*i);
 
-		p1->value() = VectorValue::make(v);
+		_p->value() = VectorValue::make(v);
 	}
 	else
 	{
-		p1->value() = j;
+		_p->value() = j;
 	}
+	p = _p;
 }
 
 void from_json(const Json &j, ObjectPtr &o)

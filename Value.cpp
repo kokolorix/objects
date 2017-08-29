@@ -25,9 +25,21 @@ boost::uuids::random_generator obj::generateId;
 boost::uuids::nil_generator obj::generateNullId;
 boost::uuids::string_generator obj::generateIdFromString;
 
+obj::ValuePtr::operator String() const
+{
+	if (auto p = dynamic_pointer_cast<const Int32Value>(*this))
+		return boost::lexical_cast<String>(p->value());
+	else if (auto p = dynamic_pointer_cast<const StringValue>(*this))
+		return p->value();
+	else
+		return String();
+}
+
 obj::ValuePtr::operator int32_t() const
 {
-	if (auto p = std::dynamic_pointer_cast<const StringValue>(*this))
+	if (auto p = dynamic_pointer_cast<const Int32Value>(*this))
+		return p->value();
+	else if (auto p = dynamic_pointer_cast<const StringValue>(*this))
 		return boost::lexical_cast<int32_t>(p->value());
 	throw ImpossibleCastException(__func__);
 }

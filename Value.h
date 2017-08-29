@@ -26,6 +26,7 @@ struct ValuePtr : public shared_ptr<const Value>
 	using Base = shared_ptr<const Value>;
 	using Base::Base;
 	//ValuePtr operator [] (String name);
+	operator String() const;
 	operator int32_t() const;
 };
 using ValuePtrVector = std::vector<ValuePtr>;
