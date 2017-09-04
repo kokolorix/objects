@@ -11,6 +11,8 @@
 #ifdef __MINGW32__
 #pragma GCC diagnostic pop
 #endif
+#include <boost/lexical_cast.hpp>
+
 
 namespace obj
 {
@@ -48,6 +50,7 @@ class Value : public Thing
 protected:
 	virtual ~Value() {}
 public:
+	operator String () const { return toString(); }
 	template<typename T>
 	static std::shared_ptr<ValueImpl<T> > make(T v);
 };
@@ -80,6 +83,12 @@ public:
 	{
 		return std::make_shared<ValueImpl<T>>(v);
 	}
+
+	virtual String toString() const
+	{
+		return boost::lexical_cast<String>(_value);
+	}
+	
 private:
 	T _value;
 };
@@ -107,10 +116,21 @@ using floatValuePtr = std::shared_ptr<FloatValue>;
 
 using UuIdValue = const ValueImpl<UuId>;
 using UuIdValuePtr = std::shared_ptr<UuIdValue>;
+template<>
+String UuIdValue::toString() const
+{
+	using boost::uuids::to_string;
+	return to_string(_value);
+}
 
 using ObjectValue = const ValueImpl<ObjectPtr>;
 using ObjectValuePtr = std::shared_ptr<ObjectPtr>;
+template<>
+String ObjectValue::toString() const;
 
 using VectorValue = const ValueImpl<ValuePtrVector>;
 using VectorValuePtr = std::shared_ptr<VectorValue>;
+template<>
+String VectorValue::toString() const;
+
 }

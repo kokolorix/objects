@@ -64,4 +64,10 @@ inline ObjectPtr Object::make(PropertyListT p)
 {
 	return std::make_shared<Object>(p);
 }
+template<>
+String ObjectValue::toString() const
+{
+	return _value->toString();
+}
+
 }

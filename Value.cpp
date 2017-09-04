@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "Value.h"
 #include <boost/preprocessor.hpp>
-#include <boost/lexical_cast.hpp>
+#include <boost/algorithm/string.hpp>
 using namespace obj;
 bool registerCreators();
 bool intialized = registerCreators();
@@ -25,14 +25,26 @@ boost::uuids::random_generator obj::generateId;
 boost::uuids::nil_generator obj::generateNullId;
 boost::uuids::string_generator obj::generateIdFromString;
 
+template<>
+String VectorValue::toString() const
+{
+	std::ostringstream os;
+	bool first = true;
+	for (ValuePtr v : _value)
+	{
+		if (first)
+			first = false;
+		else
+			os << ",";
+		os << "\"" << v->toString() << "\"";
+	}
+	return os.str();
+}
+
+
 obj::ValuePtr::operator String() const
 {
-	if (auto p = dynamic_pointer_cast<const Int32Value>(*this))
-		return boost::lexical_cast<String>(p->value());
-	else if (auto p = dynamic_pointer_cast<const StringValue>(*this))
-		return p->value();
-	else
-		return String();
+	return (*this)->toString();
 }
 
 obj::ValuePtr::operator int32_t() const

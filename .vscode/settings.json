@@ -46,7 +46,13 @@
         "bitset": "cpp",
         "string": "cpp",
         "vector": "cpp",
-        "xlocale": "cpp"
+        "xlocale": "cpp",
+        "*.ipp": "cpp",
+        "memory": "cpp",
+        "optional": "cpp",
+        "regex": "cpp",
+        "xfunctional": "cpp",
+        "xlocmon": "cpp"
     },
 "editor.tabSize": 3
 }
