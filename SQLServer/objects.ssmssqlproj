@@ -19,11 +19,11 @@
     </LogicalFolder>
     <LogicalFolder Name="Queries" Type="0" Sorted="true">
       <Items>
-        <FileNode Name="CreateDb.sql">
+        <FileNode Name="objects.sql">
           <AssociatedConnectionMoniker>8c91a03d-f9b4-46c0-a305-b5dcc79ff907:(local)\SRDEV:True</AssociatedConnectionMoniker>
           <AssociatedConnSrvName>(local)\SRDEV</AssociatedConnSrvName>
           <AssociatedConnUserName />
-          <FullPath>CreateDb.sql</FullPath>
+          <FullPath>objects.sql</FullPath>
         </FileNode>
       </Items>
     </LogicalFolder>
