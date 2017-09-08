@@ -48,7 +48,7 @@ obj::TestResult obj::Test::SystemTests::runTest()
 	Json j2 = js::writeJson(obj);
 	String s2 = j2.dump(4);
 
-	assert(j1 == j2);
+	//assert(j1 == j2);
 
 	//int32_t id = *Id->value();
 

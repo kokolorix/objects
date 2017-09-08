@@ -21,7 +21,6 @@ extern boost::uuids::random_generator generateId;
 extern boost::uuids::nil_generator generateNullId;
 extern boost::uuids::string_generator generateIdFromString;
 
-
 class Value;
 struct ValuePtr : public shared_ptr<const Value>
 {
@@ -34,7 +33,19 @@ struct ValuePtr : public shared_ptr<const Value>
 using ValuePtrVector = std::vector<ValuePtr>;
 template <typename T> class ValueImpl;
 
+
 class Object;
+struct ObjectPtr;
+struct PropertyResult
+{
+	String _name;
+	ObjectPtr _object;
+	ValuePtr _value;
+
+	PropertyResult& operator =(ValuePtr value);
+	operator ValuePtr () { return _value; }
+};
+
 struct ObjectPtr : public shared_ptr<Object>
 {
 	using Base = shared_ptr<Object>;
@@ -64,6 +75,7 @@ public:
 	{
 		return std::make_shared<NothingValue<T>>();
 	}
+	virtual String toString() { return String(); }
 };
 using NothingValuePtr = std::shared_ptr<NothingValue<Unknown>>;
 

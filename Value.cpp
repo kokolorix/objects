@@ -55,3 +55,4 @@ obj::ValuePtr::operator int32_t() const
 		return boost::lexical_cast<int32_t>(p->value());
 	throw ImpossibleCastException(__func__);
 }
+

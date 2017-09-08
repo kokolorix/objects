@@ -17,13 +17,22 @@ class Object : public Thing
  public:
 	virtual operator String() const { return toString(); }
 
+	PropertyPtr property(const String &name)
+	{
+		auto it = std::find_if(_properties.begin(), _properties.end(), [name](PropertyPtr p) { return p->name() == name; });
+		if (it == _properties.end())
+			return PropertyPtr();
+		else
+			return *it;
+	}
+
 	ValuePtr at(const String &name)
 	{
-		PropertyVector::iterator it = std::find_if(_properties.begin(), _properties.end(), [name](PropertyPtr p) { return p->name() == name; });
-		if (it == _properties.end())
+		PropertyPtr p = property(name);
+		if (p)
+			return p->value();
+		else
 			return NothingValue<Unknown>::make();
-		PropertyPtr prop = *it;
-		return prop->value();
 	}
 
 	PropertyVector &properties() { return _properties; }
@@ -38,6 +47,15 @@ class Object : public Thing
 };
 
 inline ValuePtr ObjectPtr::operator[](String name) { return (*this)->at(name); }
+inline PropertyResult & obj::PropertyResult::operator=(ValuePtr value)
+{	
+	PropertyPtr p = _object->property(_name);
+	if (p)
+		p->value() = value;
+	else
+		_object->properties().push_back(Property::make(_name, value));
+	return *this;
+}
 
 template <typename IdT = UuId>
 class ObjectImpl : public Object
