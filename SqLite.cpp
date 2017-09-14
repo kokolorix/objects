@@ -31,7 +31,7 @@ ObjectPtr obj::db::readObject(const Path & filePath, const String & where)
 
 int32_t writeObjectToDb(database& db, ObjectPtr object);
 int32_t writePropertyToDb(database &db, int32_t objectId, PropertyPtr property);
-int32_t writeValueToDb(database &db, int32_t propertyId, ValuePtr value, int32_t parentId = 0);
+int32_t writeValueToDb(database &db, int32_t propertyId, ValuePtr value, int32_t valueId=0, int32_t parentId = 0);
 
 void obj::db::writeObject(const Path & filePath, ObjectPtr object)
 {
@@ -41,25 +41,35 @@ void obj::db::writeObject(const Path & filePath, ObjectPtr object)
 
 int32_t writeObjectToDb(database& db, ObjectPtr object)
 {
-	Int32ValuePtr pId = dynamic_pointer_cast<Int32Value>(object["id"]);
-	int32_t id = 0;
+	Int32ValuePtr pId = object["id"];
+	int32_t id = 0;// object.get("id", 0);
 	if (pId)
 		id = pId->value();
-	else
-		db << "select max(id) from object" >> id;
+	//else
+	//	db << "select max(id) from object" >> id;
 
 	String name = object["name"];
-
-	id = (id > 1000) ? id + 1 : 1001;
-	for (bool inserted = false; !inserted; id++)
+	if (id)
 	{
-		try
-		{
-			db << "insert into object (id,name,type) values (?,?,?);" << id << name << 3;
-			inserted = true;
-		}
-		catch (sqlite::errors::constraint_primarykey&) {}
+		db << "update object (name,type) values (?,?) where id = ?;" << name << 3 << id;
 	}
+	else
+	{
+		db << "insert into object (name,type) values (?,?);" << name << 3;
+		id = static_cast<int32_t>(db.last_insert_rowid());
+		object["id"] = id;
+	}
+
+	//id = (id > 1000) ? id + 1 : 1001;
+	//for (bool inserted = false; !inserted; id++)
+	//{
+	//	try
+	//	{
+	//		inserted = true;
+	//	}
+	//	catch (sqlite::errors::constraint_primarykey&) {}
+	//}
+
 
 	for (PropertyPtr p : object->properties())
 	{
@@ -75,29 +85,34 @@ int32_t writePropertyToDb(database &db, int32_t objectId, PropertyPtr property)
 	String name = property->name();
 	int32_t version = 1;
 
-	int32_t id = 0;
-	db << "select max(id) from property" >> id;
-	id += 1;
-
-	for (bool inserted = false; !inserted; id++)
+	int32_t propertyId(0), valueId(0);
+	auto ps = db << "select id, value from properties where object = ? and name = ?;";
+	ps << objectId << name;
+	ps >> [&propertyId, &valueId](unique_ptr<int> p, unique_ptr<int> v)
+	{ 
+		if(p)
+			propertyId =*p;
+		if (v)
+			valueId = *v;
+	};
+	if (propertyId)
 	{
-		try
-		{
-			db << "insert into property (id,name,object,version) values (?,?,?,?);"
-				<< id << name << objectId << version;
-			inserted = true;
-		}
-		catch (sqlite::errors::constraint_primarykey &)
-		{
-		}
+		db << "update property (name,object,version) values (?,?,?) where id = ?;"
+			<< name << objectId << version << propertyId;
+	}
+	else
+	{
+		db << "insert into property (name,object,version) values (?,?,?);"
+			<< name << objectId << version;
+		propertyId = static_cast<int32_t>(db.last_insert_rowid());
 	}
 
-	int32_t valueId = writeValueToDb(db, id, value);
+	int32_t v_id = writeValueToDb(db, propertyId, value, valueId);
 
-	return id;
+	return propertyId;
 }
 
-int32_t writeValueToDb(database &db, int32_t propertyId, ValuePtr value, int32_t parentId /*= 0*/)
+int32_t writeValueToDb(database &db, int32_t propertyId, ValuePtr value, int32_t valueId /*=0*/, int32_t parentId /*= 0*/)
 {
 	String valStr;
 	VectorValuePtr array;
@@ -149,32 +164,49 @@ int32_t writeValueToDb(database &db, int32_t propertyId, ValuePtr value, int32_t
 	if (parentId)
 		parent = std::make_unique<int32_t>(parentId);
 
-	int32_t id = 0;
-	db << "select max(id) from value" >> id;
-	id += 1;
-
-	for (bool inserted = false; !inserted; id++)
+	if (valueId)
 	{
-		try
-		{
-			db << "insert into value (id,type,value,property,parent,version) values (?,?,?,?,?,?);"
-				<< id  << type << valStr << propertyId << parent << version;
-			inserted = true;
-		}
-		catch (sqlite::errors::constraint_primarykey &)
-		{
-		}
+		db << "update value (type,value,property,parent,version) values (?,?,?,?,?) where id = ?;"
+			  << type << valStr << propertyId << parent << version << valueId;
+	}
+	else
+	{
+		db << "insert into value (type,value,property,parent,version) values (?,?,?,?,?);"
+			<< type << valStr << propertyId << parent << version;
+		valueId = static_cast<int32_t>(db.last_insert_rowid());
 	}
 
 	if (array)
 	{
-		for (ValuePtr v : array->value())
+		ValuePtrVector v = array->value();
+		int32_t itemId(0);
+		size_t i = 0;
+		db << "select id from value where parent = ?;" << valueId >> [&](unique_ptr<int> id)
 		{
-			int32_t elId = writeValueToDb(db, propertyId, v, id);
+			if (i < v.size())
+			{
+				ValuePtr itemValue = v[i];
+				int32_t elId = writeValueToDb(db, propertyId, itemValue, *id, valueId);
+			}
+			else
+			{
+				db << "delete from value where id = ?;" << *id;
+			}
+			i++;
+		};
+		for (; i < v.size(); i++)
+		{
+			ValuePtr itemValue = v[i];
+			int32_t elId = writeValueToDb(db, propertyId, itemValue, 0, valueId);
 		}
+
+		//for (ValuePtr v : array->value())
+		//{
+		//	int32_t elId = writeValueToDb(db, propertyId, v, valueId);
+		//}
 
 	}
 
-	return id;
+	return valueId;
 }
 

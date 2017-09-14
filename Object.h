@@ -46,15 +46,19 @@ class Object : public Thing
 	PropertyVector _properties;
 };
 
-inline ValuePtr ObjectPtr::operator[](String name) { return (*this)->at(name); }
-inline PropertyResult & obj::PropertyResult::operator=(ValuePtr value)
+template<>
+inline Result<ObjectPtr> & obj::Result<ObjectPtr>::operator=(ValuePtr value)
 {	
-	PropertyPtr p = _object->property(_name);
+	PropertyPtr p = _container->property(_name);
 	if (p)
 		p->value() = value;
 	else
-		_object->properties().push_back(Property::make(_name, value));
+		_container->properties().push_back(Property::make(_name, value));
 	return *this;
+}
+inline Result<ObjectPtr> ObjectPtr::operator[](String name)
+{ 
+	return Result<ObjectPtr>(name, *this, (*this)->at(name));
 }
 
 template <typename IdT = UuId>

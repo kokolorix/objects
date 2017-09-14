@@ -22,35 +22,52 @@ extern boost::uuids::nil_generator generateNullId;
 extern boost::uuids::string_generator generateIdFromString;
 
 class Value;
+
 struct ValuePtr : public shared_ptr<const Value>
 {
 	using Base = shared_ptr<const Value>;
 	using Base::Base;
 	//ValuePtr operator [] (String name);
+	ValuePtr() : Base() {}
+	template<typename T>	ValuePtr(const T& v);
 	operator String() const;
 	operator int32_t() const;
 };
 using ValuePtrVector = std::vector<ValuePtr>;
 template <typename T> class ValueImpl;
 
-
-class Object;
-struct ObjectPtr;
-struct PropertyResult
+template<class ContainerT>
+class Result
 {
-	String _name;
-	ObjectPtr _object;
-	ValuePtr _value;
+public:
+	Result(const String& n, ContainerT& c ):_name(n), _container(c) {}
+	Result(const String& n, ContainerT& c, ValuePtr r ):_name(n), _container(c), _result(r) {}
+	Result(const Result& r) = default;
 
-	PropertyResult& operator =(ValuePtr value);
-	operator ValuePtr () { return _value; }
+private:
+	String _name;
+	ContainerT _container;
+	ValuePtr _result;
+	
+public:
+	Result& operator =(ValuePtr r) { return *this; }
+	operator ValuePtr () { return _result; }
+	operator String () { return _result; }
+	template<class ResT>
+	operator shared_ptr<ResT>() { return dynamic_pointer_cast<ResT>(_result); }
 };
 
+class Object;
 struct ObjectPtr : public shared_ptr<Object>
 {
 	using Base = shared_ptr<Object>;
 	using Base::Base;
-	ValuePtr operator [] (String name);
+	Result<ObjectPtr> operator [] (String name);
+	//inline int32_t getInt32(String name, int32_t default)
+	//{
+	//	ValuePtr v = operator[](name);
+	//	return v ? v : default;
+	//}
 };
 
 using ObjectPtrVector = std::vector<ObjectPtr>;
@@ -75,7 +92,7 @@ public:
 	{
 		return std::make_shared<NothingValue<T>>();
 	}
-	virtual String toString() { return String(); }
+	virtual String toString() const  override { return String(); }
 };
 using NothingValuePtr = std::shared_ptr<NothingValue<Unknown>>;
 
@@ -145,4 +162,8 @@ using VectorValuePtr = std::shared_ptr<VectorValue>;
 template<>
 String VectorValue::toString() const;
 
+}
+template< typename T >
+inline obj::ValuePtr::ValuePtr(const T & v) : Base(Value::make(v))
+{
 }

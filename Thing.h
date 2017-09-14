@@ -8,6 +8,8 @@ namespace obj
 {
 using ::std::istringstream;
 using ::std::ostringstream;
+using ::std::unique_ptr;
+using ::std::make_unique;
 using ::std::shared_ptr;
 using ::std::make_shared;
 using ::std::dynamic_pointer_cast;
