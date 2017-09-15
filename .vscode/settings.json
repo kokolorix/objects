@@ -52,7 +52,11 @@
         "optional": "cpp",
         "regex": "cpp",
         "xfunctional": "cpp",
-        "xlocmon": "cpp"
+        "xlocmon": "cpp",
+        "locale": "cpp",
+        "xlocmes": "cpp",
+        "xlocnum": "cpp",
+        "xloctime": "cpp"
     },
 "editor.tabSize": 3
 }

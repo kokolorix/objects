@@ -21,6 +21,9 @@ extern boost::uuids::random_generator generateId;
 extern boost::uuids::nil_generator generateNullId;
 extern boost::uuids::string_generator generateIdFromString;
 
+using IdType = uint32_t;
+extern const IdType nullId;
+
 class Value;
 
 struct ValuePtr : public shared_ptr<const Value>
@@ -45,6 +48,7 @@ public:
 	Result(const Result& r) = default;
 
 private:
+	IdType _id;
 	String _name;
 	ContainerT _container;
 	ValuePtr _result;
@@ -63,24 +67,26 @@ struct ObjectPtr : public shared_ptr<Object>
 	using Base = shared_ptr<Object>;
 	using Base::Base;
 	Result<ObjectPtr> operator [] (String name);
-	//inline int32_t getInt32(String name, int32_t default)
-	//{
-	//	ValuePtr v = operator[](name);
-	//	return v ? v : default;
-	//}
 };
 
 using ObjectPtrVector = std::vector<ObjectPtr>;
 
 class Value : public Thing
 {
-	friend class std::_Ref_count_obj<Value>;
 protected:
+	Value() : _id(nullId){}
+	Value(IdType id) : _id(id){}
 	virtual ~Value() {}
 public:
+	IdType id() const { return _id; }
+	IdType& id() { return _id; }
 	operator String () const { return toString(); }
 	template<typename T>
 	static std::shared_ptr<ValueImpl<T> > make(T v);
+	template<typename T>
+	static std::shared_ptr<ValueImpl<T> > make(IdType id, T v);
+private:
+	IdType _id;
 };
 
 class Unknown {};
@@ -99,10 +105,10 @@ using NothingValuePtr = std::shared_ptr<NothingValue<Unknown>>;
 template <typename T>
 class ValueImpl : public Value
 {
-	friend class std::_Ref_count_obj<ValueImpl>;
-protected:
+public:
 	ValueImpl() : _value() {}
 	ValueImpl(T v) : _value(v) {}
+	ValueImpl(IdType id, T v) : Value(id), _value(v) {}
 	virtual ~ValueImpl() {}
 public:
 	const T& value() const { return _value; }
@@ -123,10 +129,10 @@ private:
 };
 
 template<typename T>
-inline std::shared_ptr<ValueImpl<T>> Value::make(T v)
-{
-	return std::make_shared<ValueImpl<T>>(v);
-}
+inline std::shared_ptr<ValueImpl<T>> Value::make(T v){	return std::make_shared<ValueImpl<T>>(v);}
+
+template<typename T>
+inline std::shared_ptr<ValueImpl<T>> Value::make(IdType id, T v){	return std::make_shared<ValueImpl<T>>(id, v);}
 
 using StringValue = const ValueImpl<String>;
 using StringValuePtr = std::shared_ptr<StringValue>;

@@ -7,13 +7,18 @@ namespace obj
 {
 class Object : public Thing
 {
- protected:
-	 Object() {};
+ public:
+	Object() : _id(nullId){};
+	Object(IdType id) : _id(id) {}
 	template <class PropertyListT>
-	Object(PropertyListT p) : _properties(p.begin(), p.end()) {}
+	Object(PropertyListT p) : _id(nullId), _properties(p.begin(), p.end()) {}
+	template <class PropertyListT>
+	Object(IdType id, PropertyListT p) : _id(id), _properties(p.begin(), p.end()) {}
 	virtual ~Object() {}
-	 friend class std::_Ref_count_obj<Object>;
+	IdType id() const { return _id; }
+	IdType &id() { return _id; }
 
+ protected:
  public:
 	virtual operator String() const { return toString(); }
 
@@ -39,16 +44,20 @@ class Object : public Thing
 	const PropertyVector &properties() const { return _properties; }
 
 	static ObjectPtr make();
+	static ObjectPtr make(IdType id);
 	template <class PropertyListT>
 	static ObjectPtr make(PropertyListT p);
+	template <class PropertyListT>
+	static ObjectPtr make(IdType id, PropertyListT p);
 
  private:
+	IdType _id;
 	PropertyVector _properties;
 };
 
-template<>
-inline Result<ObjectPtr> & obj::Result<ObjectPtr>::operator=(ValuePtr value)
-{	
+template <>
+inline Result<ObjectPtr> &obj::Result<ObjectPtr>::operator=(ValuePtr value)
+{
 	PropertyPtr p = _container->property(_name);
 	if (p)
 		p->value() = value;
@@ -57,39 +66,18 @@ inline Result<ObjectPtr> & obj::Result<ObjectPtr>::operator=(ValuePtr value)
 	return *this;
 }
 inline Result<ObjectPtr> ObjectPtr::operator[](String name)
-{ 
+{
 	return Result<ObjectPtr>(name, *this, (*this)->at(name));
 }
 
-template <typename IdT = UuId>
-class ObjectImpl : public Object
-{
- public:
-	ObjectImpl() : Object({"id", generateNullId()})
-	{
-	}
-	template <class PropertyListT>
-	ObjectImpl(PropertyListT p) : Object(p)
-	{
-	}
-	template <class PropertyListT>
-	ObjectImpl(const IdT &id, PropertyListT p) : Object(p) {}
-};
-
-inline ObjectPtr Object::make()
-{
-	return std::make_shared<Object>();
-}
+inline ObjectPtr Object::make() { return std::make_shared<Object>(); }
+inline ObjectPtr Object::make(IdType id) { return std::make_shared<Object>(id); }
 
 template <class PropertyListT>
-inline ObjectPtr Object::make(PropertyListT p)
-{
-	return std::make_shared<Object>(p);
-}
-template<>
-String ObjectValue::toString() const
-{
-	return _value->toString();
-}
+inline ObjectPtr Object::make(PropertyListT p) { return std::make_shared<Object>(p); }
+template <class PropertyListT>
+inline ObjectPtr Object::make(IdType id, PropertyListT p) { return std::make_shared<Object>(id, p); }
 
+template <>
+String ObjectValue::toString() const { return _value->toString(); }
 }

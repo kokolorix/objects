@@ -24,6 +24,7 @@ bool registerCreators()
 boost::uuids::random_generator obj::generateId;
 boost::uuids::nil_generator obj::generateNullId;
 boost::uuids::string_generator obj::generateIdFromString;
+const IdType obj::nullId = 0;
 
 template<>
 String VectorValue::toString() const
