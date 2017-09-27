@@ -6,8 +6,7 @@ namespace obj
 {
 namespace db
 {
-ObjectPtrVector readObjects(const Path& filePath, const String& where = "");
-ObjectPtr readObject(const Path& filePath, const String& where = "");
-void writeObject(const Path& filePath, ObjectPtr object);
+ObjectPtr readObject(const Path& filePath, IdType id);
+IdType writeObject(const Path& filePath, ObjectPtr object);
 }
 }

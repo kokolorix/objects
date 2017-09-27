@@ -53,8 +53,10 @@ void sqlT::simpleTest()
 				{ "value", 42.99 }
 			} }
 		};
-		ObjectPtr obj = js::readJson(j);
-		db::writeObject("../objects.db3", obj);
+		ObjectPtr obj1 = js::readJson(j);
+		IdType id = db::writeObject("../objects.db3", obj1);
+		ObjectPtr obj2 = db::readObject("../objects.db3", id);
+		assert(obj1 == obj2);
 	}
 }
 

@@ -21,11 +21,19 @@ extern boost::uuids::random_generator generateId;
 extern boost::uuids::nil_generator generateNullId;
 extern boost::uuids::string_generator generateIdFromString;
 
+using boost::lexical_cast;
+
 using IdType = uint32_t;
 extern const IdType nullId;
 
 class Value;
+}
 
+template<>
+inline obj::UuId boost::lexical_cast(const obj::String& str) { return obj::generateIdFromString(str); }
+
+namespace obj
+{
 struct ValuePtr : public shared_ptr<const Value>
 {
 	using Base = shared_ptr<const Value>;
