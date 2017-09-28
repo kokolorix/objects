@@ -194,37 +194,11 @@ PropertyPtr readPropertyFromDb(database & db, IdType propertyId)
 ValuePtr readPropertyValueFromDb(database & db, IdType propertyId)
 {
 	ValuePtr value;
-	auto pQuery = db << "select id, type, value from value where property = ?;" << propertyId;
-	pQuery >> [&](unique_ptr<sqlite3_int64> i, unique_ptr<sqlite3_int64> t, unique_ptr<String> v)
+	auto pQuery = db << "select id from value where property = ?;" << propertyId;
+	pQuery >> [&](unique_ptr<sqlite3_int64> i)
 	{
 		IdType id = static_cast<IdType>(*i);
-		IdType typeId = static_cast<IdType>(*t);
-		const String strValue = *v;
-		if (typeId == 4)
-			value = StringValue::make(strValue);
-		else if (typeId == 5)
-			value = BooleanValue::make(lexical_cast<bool>(strValue));
-		else if (typeId == 6)
-			value = Int32Value::make(lexical_cast<int32_t>(strValue));
-		else if (typeId == 7)
-			value = UInt32Value::make(lexical_cast<uint32_t>(strValue));
-		else if (typeId == 8)
-			value = FloatValue::make(lexical_cast<double>(strValue));
-		else if (typeId == 9)
-			value = UuIdValue::make(lexical_cast<UuId>(strValue));
-		else if (typeId == 10)
-		{
-			//ObjectPtr obj;
-			//return ObjectValue::make(obj);
-			value = ObjectValuePtr();
-		}
-		else if (typeId == 11)
-			value = NothingValue<Unknown>::make();
-		else if (typeId == 12)
-		{
-			auto pQuery = db << "select type, value from value where parent = ?;" << id;
-			value = VectorValuePtr();
-		}
+		value = readValueFromDb(db, id);
 	};
 	return value;
 }
@@ -232,7 +206,7 @@ ValuePtr readPropertyValueFromDb(database & db, IdType propertyId)
 ValuePtr readValueFromDb(database & db, IdType id)
 {
 	ValuePtr value;
-	auto pQuery = db << "select type, value from value where iid = ?;" << id;
+	auto pQuery = db << "select type, value from value where id = ?;" << id;
 	pQuery >> [&]( unique_ptr<sqlite3_int64> t, unique_ptr<String> v)
 	{
 		IdType typeId = static_cast<IdType>(*t);
@@ -256,19 +230,19 @@ ValuePtr readValueFromDb(database & db, IdType id)
 			value = ObjectValue::make(obj);
 		}
 		else if (typeId == 11)
-			value = NothingValue<Unknown>::make();
-		else if (typeId == 12)
 		{
 			auto vectorValue = VectorValue::make(ValuePtrVector());
-			auto valueVector = const_cast<ValuePtrVector&>(vectorValue->value());
-			auto pQuery = db << "select type, value from value where parent = ?;" << id;
-			pQuery >> [&](unique_ptr<sqlite3_int64> t, unique_ptr<String> v)
+			auto& valueVector = const_cast<ValuePtrVector&>(vectorValue->value());
+			auto pQuery = db << "select id from value where parent = ?;" << id;
+			pQuery >> [&](unique_ptr<sqlite3_int64> i)
 			{	
-				ValuePtr value = readValueFromDb(db, static_cast<IdType>(*t));
+				ValuePtr value = readValueFromDb(db, static_cast<IdType>(*i));
 				valueVector.push_back(value);
 			};
 			value = vectorValue;
 		}
+		else if (typeId == 12)
+			value = NothingValue<Unknown>::make();
 	};
 	return value;
 

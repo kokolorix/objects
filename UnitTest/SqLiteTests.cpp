@@ -26,11 +26,6 @@ void simpleTest();
 
 obj::TestResult obj::Test::SqLiteTests::runTest()
 {
-	//ObjectPtr obj1 = js::readFile("../.vscode/tasks.json");
-
-	//ObjectPtr obj2 = db::readObject("../objects.db3", "");
-
-	//assert(obj1 == obj2);
 	sqlT::simpleTest();
 
 	return TestResult::Successful;
@@ -56,6 +51,9 @@ void sqlT::simpleTest()
 		ObjectPtr obj1 = js::readJson(j);
 		IdType id = db::writeObject("../objects.db3", obj1);
 		ObjectPtr obj2 = db::readObject("../objects.db3", id);
+		String str1 = js::writeJson(obj1).dump(4);
+		String str2 = js::writeJson(obj2).dump(4);
+		assert(str1 == str2);		
 		assert(obj1 == obj2);
 	}
 }

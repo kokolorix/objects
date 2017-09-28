@@ -8,8 +8,9 @@
             "program": "${workspaceRoot}\\x64\\Debug\\UnitTest.exe",
             "args": [],
             "stopAtEntry": false,
-            "cwd": "${workspaceRoot}",
-            "environment": [],
+            "cwd": "${workspaceRoot}\\UnitTest",
+            "environment": [
+            ],
             "symbolSearchPath": "srv*${workspaceRoot}\\x64\\Debug*https://msdl.microsoft.com/download/symbols",
             "externalConsole": false
         },

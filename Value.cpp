@@ -45,7 +45,7 @@ String VectorValue::toString() const
 
 obj::ValuePtr::operator String() const
 {
-	return (*this)->toString();
+	return (*this) ? (*this)->toString() : String();
 }
 
 obj::ValuePtr::operator int32_t() const
