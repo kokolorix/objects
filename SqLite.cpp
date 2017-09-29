@@ -194,7 +194,7 @@ PropertyPtr readPropertyFromDb(database & db, IdType propertyId)
 ValuePtr readPropertyValueFromDb(database & db, IdType propertyId)
 {
 	ValuePtr value;
-	auto pQuery = db << "select id from value where property = ?;" << propertyId;
+	auto pQuery = db << "select id from value where parent is null and property = ?;" << propertyId;
 	pQuery >> [&](unique_ptr<sqlite3_int64> i)
 	{
 		IdType id = static_cast<IdType>(*i);
