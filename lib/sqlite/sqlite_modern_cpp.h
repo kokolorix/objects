@@ -33,11 +33,11 @@
 #include <boost/optional.hpp>
 #endif
 
-#include <sqlite3.h>
+#include <sqlite/sqlite3.h>
 
-#include "sqlite_modern_cpp/errors.h"
-#include "sqlite_modern_cpp/utility/function_traits.h"
-#include "sqlite_modern_cpp/utility/uncaught_exceptions.h"
+#include "sqlite/sqlite_modern_cpp/errors.h"
+#include "sqlite/sqlite_modern_cpp/utility/function_traits.h"
+#include "sqlite/sqlite_modern_cpp/utility/uncaught_exceptions.h"
 
 #ifdef MODERN_SQLITE_STD_VARIANT_SUPPORT
 #include "sqlite_modern_cpp/utility/variant.h"

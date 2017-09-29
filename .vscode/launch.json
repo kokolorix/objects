@@ -2,16 +2,16 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "(Windows) Launch",
+            "name": "(VsDbg) Launch",
             "type": "cppvsdbg",
             "request": "launch",
-            "program": "${workspaceRoot}\\x64\\Debug\\UnitTest.exe",
+            "program": "${workspaceRoot}\\bin\\x64\\Debug\\UnitTest.exe",
             "args": [],
             "stopAtEntry": false,
             "cwd": "${workspaceRoot}\\UnitTest",
             "environment": [
             ],
-            "symbolSearchPath": "srv*${workspaceRoot}\\x64\\Debug*https://msdl.microsoft.com/download/symbols",
+            "symbolSearchPath": "srv*${workspaceRoot}\\bin\\x64\\Debug*https://msdl.microsoft.com/download/symbols",
             "externalConsole": false
         },
         {

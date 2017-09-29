@@ -25,7 +25,15 @@ public:
 	virtual ~Property() {}
 	IdType id() const { return _id; }
 	IdType& id() { return _id; }
-	virtual operator String  () const { return toString(); }
+	operator String  () const { return toString(); }
+	virtual bool operator<(const Thing & other) const override
+	{
+		if (auto o = dynamic_cast<decltype(this)>(&other))
+			return *this < *o;
+		else
+			return Thing::operator<(other);
+	}
+	bool operator < (const Property& other);
 	const String& name() const { return _name; }
 	String& name() { return _name; }
 	ValuePtr value() const { return _value; }

@@ -14,16 +14,16 @@
     <ProjectCapability Include="SourceItemsFromImports" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="$(MSBuildThisFileDirectory)Json.h" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)json\json.hpp" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)SqLite.h" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)xml\rapidxml.hpp" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)xml\rapidxml_iterators.hpp" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)xml\rapidxml_print.hpp" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)xml\rapidxml_utils.hpp" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)src\Json.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)lib\json\json.hpp" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)sc\SqLite.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)lib\xml\rapidxml.hpp" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)lib\xml\rapidxml_iterators.hpp" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)lib\xml\rapidxml_print.hpp" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)lib\xml\rapidxml_utils.hpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="$(MSBuildThisFileDirectory)Json.cpp" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)SqLite.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)src\Json.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)src\SqLite.cpp" />
   </ItemGroup>
 </Project>

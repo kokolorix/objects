@@ -49,8 +49,8 @@ void sqlT::simpleTest()
 			} }
 		};
 		ObjectPtr obj1 = js::readJson(j);
-		IdType id = db::writeObject("../objects.db3", obj1);
-		ObjectPtr obj2 = db::readObject("../objects.db3", id);
+		//IdType id = db::writeObject("../objects.db3", obj1);
+		ObjectPtr obj2 = db::readObject("../objects.db3", 13);
 		String str1 = js::writeJson(obj1).dump(4);
 		String str2 = js::writeJson(obj2).dump(4);
 		assert(str1 == str2);		

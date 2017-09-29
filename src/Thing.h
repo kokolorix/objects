@@ -50,9 +50,24 @@ public:
 		os << typeid(*this).name() << " (" << std::hex << this << ")";
 		return os.str();
 	}
+	virtual bool operator < (const Thing& other) const
+	{
+		return this < &other;
+	}
 };
 
 using ThingPtr = shared_ptr<Thing>;
+inline bool operator < (ThingPtr x, ThingPtr y)
+{
+	return  (x.get() && y.get()) ? (*x < *y) : x.get() < y.get();
+}
+//inline bool operator > (ThingPtr x, ThingPtr y) {return }
+inline bool operator == (ThingPtr x, ThingPtr y)
+{
+	return x.get() == y.get() || (x.get() && y.get() && !(*x < *y) && !(*y < *x));
+}
+//inline bool operator != (ThingPtr x, ThingPtr y) { return !(x == y); }
+
 
 using ThingCreator = std::function<ThingPtr(void)>;
 class ThingFactory

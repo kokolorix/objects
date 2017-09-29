@@ -118,6 +118,18 @@ public:
 	ValueImpl(T v) : _value(v) {}
 	ValueImpl(IdType id, T v) : Value(id), _value(v) {}
 	virtual ~ValueImpl() {}
+	virtual bool operator<(const Thing & other) const override
+	{
+		if (auto o = dynamic_cast<decltype(this)>(&other))
+			return *this < *o;
+		else
+			return Thing::operator<(other);
+	}
+	bool operator < (const ValueImpl& other) const
+	{
+		return _value < other._value;
+	}
+
 public:
 	const T& value() const { return _value; }
 	T& value() { return _value; }

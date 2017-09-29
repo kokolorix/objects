@@ -17,6 +17,15 @@ class Object : public Thing
 	virtual ~Object() {}
 	IdType id() const { return _id; }
 	IdType &id() { return _id; }
+	virtual bool operator<(const Thing & other) const override
+	{
+		if (auto o = dynamic_cast<decltype(this)>(&other))
+			return *this < *o;
+		else
+			return Thing::operator<(other);
+	}
+	bool operator < (const Object& other) const;
+
 
  protected:
  public:
@@ -69,7 +78,10 @@ inline Result<ObjectPtr> ObjectPtr::operator[](String name)
 {
 	return Result<ObjectPtr>(name, *this, (*this)->at(name));
 }
-
+inline bool Object::operator<(const Object & other) const
+{
+	return false;
+}
 inline ObjectPtr Object::make() { return std::make_shared<Object>(); }
 inline ObjectPtr Object::make(IdType id) { return std::make_shared<Object>(id); }
 

@@ -3,7 +3,7 @@
 
 #pragma warning(push)
 #pragma warning(disable : 4065)
-#include <sqlite_modern_cpp.h>
+#include <sqlite/sqlite_modern_cpp.h>
 #pragma warning(pop)
 
 using namespace  sqlite;
