@@ -79,6 +79,9 @@ struct ObjectPtr : public shared_ptr<Object>
 
 using ObjectPtrVector = std::vector<ObjectPtr>;
 
+bool operator < (ObjectPtr x, ObjectPtr y);
+bool operator == (ObjectPtr x, ObjectPtr y);
+
 class Value : public Thing
 {
 protected:
@@ -93,7 +96,7 @@ public:
 	static std::shared_ptr<ValueImpl<T> > make(T v);
 	template<typename T>
 	static std::shared_ptr<ValueImpl<T> > make(IdType id, T v);
-private:
+protected:
 	IdType _id;
 };
 
@@ -107,6 +110,20 @@ public:
 		return std::make_shared<NothingValue<T>>();
 	}
 	virtual String toString() const  override { return String(); }
+	virtual bool operator<(const Thing & other) const override
+	{
+		if (auto o = dynamic_cast<decltype(this)>(&other))
+			return *this < *o;
+		else
+			return Thing::operator<(other);
+	}
+	bool operator < (const NothingValue& other) const
+	{
+		if (_id && other._id)
+			return _id < other._id;
+		else
+			return false;
+	}
 };
 using NothingValuePtr = std::shared_ptr<NothingValue<Unknown>>;
 
@@ -127,7 +144,10 @@ public:
 	}
 	bool operator < (const ValueImpl& other) const
 	{
-		return _value < other._value;
+		if (_id && other._id)
+			return std::tie(_id, _value) < std::tie(other._id, other._value);
+		else
+			return _value < other._value;
 	}
 
 public:
@@ -187,6 +207,16 @@ using VectorValue = const ValueImpl<ValuePtrVector>;
 using VectorValuePtr = std::shared_ptr<VectorValue>;
 template<>
 String VectorValue::toString() const;
+inline bool operator < (ValuePtr x, ValuePtr y)
+{
+	bool result = (x.get() && y.get()) ? (*x < *y) : x.get() < y.get();
+	return result;
+}
+inline bool operator == (ValuePtr x, ValuePtr y)
+{
+	bool result = x.get() == y.get() || (x.get() && y.get() && !(*x < *y) && !(*y < *x));
+	return result;
+}
 
 }
 template< typename T >

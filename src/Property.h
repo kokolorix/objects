@@ -19,9 +19,9 @@ using PropertyPtr = shared_ptr<Property>;
 class Property : public Thing
 {
 public:
-	Property(String n, ValuePtr v = ValuePtr()) :_id(nullId), _name(n), _value(v) {}
-	Property(IdType id, String n, ValuePtr v = ValuePtr()) :_id(id), _name(n), _value(v) {}
-	Property() {}
+	Property(String n, ValuePtr v = ValuePtr()) : _id(nullId), _name(n), _value(v) {}
+	Property(IdType id, String n, ValuePtr v = ValuePtr()) : _id(id), _name(n), _value(v) {}
+	Property() : _id(nullId) {}
 	virtual ~Property() {}
 	IdType id() const { return _id; }
 	IdType& id() { return _id; }
@@ -33,7 +33,7 @@ public:
 		else
 			return Thing::operator<(other);
 	}
-	bool operator < (const Property& other);
+	bool operator < (const Property& other) const;
 	const String& name() const { return _name; }
 	String& name() { return _name; }
 	ValuePtr value() const { return _value; }
@@ -57,4 +57,16 @@ struct LessProperty
 
 using PropertySet = set<PropertyPtr, LessProperty>;
 using PropertyVector = vector<PropertyPtr>;
+inline bool operator < (PropertyPtr x, PropertyPtr y)
+{
+	bool result = (x.get() && y.get()) ? (*x < *y) : x.get() < y.get();
+	return result;
+}
+inline bool operator == (PropertyPtr x, PropertyPtr y)
+{
+	bool result = x.get() == y.get() || (x.get() && y.get() && !(*x < *y) && !(*y < *x));
+	return result;
+}
+
+
 }

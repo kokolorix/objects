@@ -220,7 +220,8 @@ ValuePtr readValueFromDb(database & db, IdType id)
 		else if (typeId == 7)
 			value = UInt32Value::make(lexical_cast<uint32_t>(strValue));
 		else if (typeId == 8)
-			value = FloatValue::make(lexical_cast<double>(strValue));
+			value = FloatValue::make(std::stod(strValue));
+			//value = FloatValue::make(lexical_cast<double>(strValue));
 		else if (typeId == 9)
 			value = UuIdValue::make(lexical_cast<UuId>(strValue));
 		else if (typeId == 10)

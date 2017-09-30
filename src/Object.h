@@ -78,10 +78,6 @@ inline Result<ObjectPtr> ObjectPtr::operator[](String name)
 {
 	return Result<ObjectPtr>(name, *this, (*this)->at(name));
 }
-inline bool Object::operator<(const Object & other) const
-{
-	return false;
-}
 inline ObjectPtr Object::make() { return std::make_shared<Object>(); }
 inline ObjectPtr Object::make(IdType id) { return std::make_shared<Object>(id); }
 
@@ -92,4 +88,5 @@ inline ObjectPtr Object::make(IdType id, PropertyListT p) { return std::make_sha
 
 template <>
 String ObjectValue::toString() const { return _value->toString(); }
+
 }

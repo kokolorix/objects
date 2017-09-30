@@ -19,6 +19,10 @@ void from_json(const Json &j, ValuePtr &v)
 		ObjectPtr o = j;
 		v = ObjectValue::make(o);
 	}
+	else
+	{
+		v = NothingValue<Unknown>::make();
+	}
 }
 
 void from_json(const Json &j, PropertyPtr &p)
