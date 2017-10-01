@@ -85,6 +85,8 @@ IdType writePropertyToDb(database &db, IdType objectId, PropertyPtr property)
 
 	IdType v_id = writeValueToDb(db, propertyId, value, valueId);
 
+	property->id() = propertyId;
+
 	return propertyId;
 }
 
@@ -125,6 +127,7 @@ IdType writeValueToDb(database &db, IdType propertyId, ValuePtr value, IdType va
 		db << "insert into value (type,value,property,parent,version) values (?,?,?,?,?);"
 			<< type << valStr << propertyId << parent << version;
 		valueId = static_cast<IdType>(db.last_insert_rowid());
+		std::const_pointer_cast<Value>(value)->id() = valueId;
 	}
 
 	if (array)
@@ -148,7 +151,7 @@ IdType writeValueToDb(database &db, IdType propertyId, ValuePtr value, IdType va
 		for (; i < v.size(); i++)
 		{
 			ValuePtr itemValue = v[i];
-			IdType elId = writeValueToDb(db, propertyId, itemValue, 0, valueId);
+			IdType itemId = writeValueToDb(db, propertyId, itemValue, 0, valueId);
 		}
 	}
 
