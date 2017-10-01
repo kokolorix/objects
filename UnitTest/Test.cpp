@@ -6,6 +6,7 @@
 #include <sstream>
 #include <iostream>
 #include <iomanip>
+#include <regex>
 
 #include <windows.h>
 
@@ -26,8 +27,9 @@ CaseMap& getCaseMap()
 
 struct NameChecker
 {
-	NameChecker(const String& pattern){}
-	bool operator()(const String& name) { return true; }
+	NameChecker(const String& pattern) : _pattern(pattern) {}
+	bool operator()(const String& name);
+	String _pattern;
 };
 
 template<typename Elem>
@@ -107,6 +109,18 @@ public:
 };
 
 using OutputStream = output_stream<char>;
+
+bool NameChecker::operator()(const String & name)
+{
+	if(_pattern == name)
+		return true;
+
+	std::regex rx(_pattern);
+	if (std::regex_match(name, rx))
+		return true;
+	else
+		return false;
+}
 
 }
 
