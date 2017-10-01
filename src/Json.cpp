@@ -13,7 +13,7 @@ void from_json(const Json &j, ValuePtr &v)
 	else if (j.is_string())
 		v = StringValue::make(j.get<String>());
 	else if (j.is_number_float())
-		v = FloatValue::make(j.get<float>());
+		v = FloatValue::make(j.get<double>());
 	else if (j.is_object())
 	{
 		ObjectPtr o = j;

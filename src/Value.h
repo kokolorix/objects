@@ -188,7 +188,14 @@ using UInt32ValuePtr = std::shared_ptr<UInt32Value>;
 
 using FloatValue = const ValueImpl<double>;
 using floatValuePtr = std::shared_ptr<FloatValue>;
-
+template<>
+bool FloatValue::operator<(const FloatValue& other) const
+{
+	if (_id && other._id)
+		return std::tie(_id, _value) < std::tie(other._id, other._value);
+	else
+		return _value < other._value;
+}
 using UuIdValue = const ValueImpl<UuId>;
 using UuIdValuePtr = std::shared_ptr<UuIdValue>;
 template<>
