@@ -30,14 +30,11 @@ template<>
 String VectorValue::toString() const
 {
 	std::ostringstream os;
-	bool first = true;
-	for (ValuePtr v : _value)
+	for (size_t i = 0; i < _value.size(); ++i)
 	{
-		if (first)
-			first = false;
-		else
+		if(i)
 			os << ",";
-		os << "\"" << v->toString() << "\"";
+		os << "\"" << _value[i]->toString() << "\"";
 	}
 	return os.str();
 }
