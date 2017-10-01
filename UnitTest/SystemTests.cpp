@@ -15,6 +15,10 @@ namespace
 
 obj::TestResult obj::Test::SystemTests::runTest()
 {
+
+	double pi1 = 3.141;
+	double pi2 = lexical_cast<double>("3.141");
+	bool piTest = !(pi1 < pi2) && !(pi2 < pi1);
 	ValuePtr a2e = Value::make(42);
 	PropertyPtr Name = Property::make("Name", StringValue::make("TheFirstObject"));
 	PropertyPtr A2E = Property::make("AnswerToEverything", a2e);
