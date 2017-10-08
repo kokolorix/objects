@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "Object.h"
+using namespace obj;
 
 bool obj::operator < (ObjectPtr x, ObjectPtr y)
 {
@@ -18,4 +19,9 @@ bool obj::Object::operator<(const Object & o) const
 		return std::tie(_id, _properties) < std::tie(o._id, o._properties);
 	else
 		return _properties < o._properties;
+}
+
+ValuePtr obj::Object::value(const String & name, ValuePtr default)
+{
+	return default;
 }

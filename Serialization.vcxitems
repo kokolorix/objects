@@ -14,6 +14,7 @@
     <ProjectCapability Include="SourceItemsFromImports" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="$(MSBuildThisFileDirectory)lib\xml\xmlParser.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)src\Json.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)lib\json\json.hpp" />
     <ClInclude Include="$(MSBuildThisFileDirectory)sc\SqLite.h" />
@@ -21,9 +22,12 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)lib\xml\rapidxml_iterators.hpp" />
     <ClInclude Include="$(MSBuildThisFileDirectory)lib\xml\rapidxml_print.hpp" />
     <ClInclude Include="$(MSBuildThisFileDirectory)lib\xml\rapidxml_utils.hpp" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)src\Xml.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="$(MSBuildThisFileDirectory)lib\xml\xmlParser.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)src\Json.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)src\SqLite.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)src\Xml.cpp" />
   </ItemGroup>
 </Project>

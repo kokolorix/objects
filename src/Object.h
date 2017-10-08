@@ -25,6 +25,7 @@ class Object : public Thing
 			return Thing::operator<(other);
 	}
 	bool operator < (const Object& other) const;
+	ValuePtr value(const String& name, ValuePtr default = ValuePtr());
 
 
  protected:
