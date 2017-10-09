@@ -35,34 +35,51 @@ namespace obj
 	{
 		return ObjectPtr();
 	}
-	XmlNode* toXml(XmlNode* parent, ValuePtr value)
+	XmlNode* toXml(XmlNode* parent, ObjectPtr object);
+	XmlNode* toXml(XmlNode* parent, ValuePtr value, const String& name = "")
 	{
+		XmlDocument* doc = parent->document();
 		if (auto v = std::dynamic_pointer_cast<ObjectValue>(value))
 		{
-			XmlNode* objectNode = toXml(parent, v->value());
+			XmlNode* objectNode = doc->allocate_node(node_element, doc->allocate_string(name.c_str()));
+			parent->append_node(objectNode);
+			objectNode = toXml(objectNode, v->value());
 			return objectNode;
 		}
 		else if (auto v = std::dynamic_pointer_cast<VectorValue>(value))
 		{
-			XmlNode* elementNode = parent;
 			for (ValuePtr element : v->value())
 			{
-				String strValue = element;
-				if (!elementNode)
-				{
-					elementNode = parent->document()->allocate_node(node_element, parent->name());
-					parent->append_node(elementNode);
-				}
-				elementNode->value(parent->document()->allocate_string(strValue.c_str()));
-				elementNode = nullptr;
+				XmlNode* elementNode = doc->allocate_node(node_element, doc->allocate_string(name.c_str()));
+				parent->append_node(elementNode);
+				XmlNode* valueNode = toXml(elementNode, element);
 			}
 			return parent;
 		}
 		else
 		{
 			String strValue = value;
-			parent->value(parent->document()->allocate_string(strValue.c_str()));
-			return parent;
+			if (name.empty())
+			{
+				parent->value(parent->document()->allocate_string(strValue.c_str()));
+				return parent;
+			}
+			else
+			{
+				if (dynamic_pointer_cast<const NothingValue<Unknown>>(value))
+				{
+					XmlNode* objectNode = doc->allocate_node(node_element, doc->allocate_string(name.c_str()));
+					parent->append_node(objectNode);
+					XmlAttribute* attribute = doc->allocate_attribute("null", "true");
+					objectNode->append_attribute(attribute);
+					return objectNode;
+				}
+				XmlAttribute* attribute = doc->allocate_attribute(
+					doc->allocate_string(name.c_str()),
+					doc->allocate_string(strValue.c_str()));
+				parent->append_attribute(attribute);
+				return parent;
+			}
 		}
 	}
 	XmlNode* toXml(XmlNode* parent, PropertyPtr property)
@@ -70,17 +87,11 @@ namespace obj
 		if (property->name() == TEXT_NODE)
 		{
 			XmlNode* valueNode = toXml(parent, property->value());
-			if (valueNode == parent)
-				return valueNode;
-			parent->append_node(valueNode);
 			return parent;
 		}
 		else
 		{
-			XmlNode* propertyNode = parent->document()->allocate_node(node_element,
-				parent->document()->allocate_string(property->name().c_str())
-			);
-			parent->append_node(propertyNode);
+			XmlNode* valueNode = toXml(parent, property->value(), property->name());
 			return parent;
 		}
 	}
@@ -91,7 +102,8 @@ namespace obj
 			if (p->name() == ELEMENT_NAME)
 				continue;
 			XmlNode* propertyNode = toXml(parent, p);
-			parent->append_node(propertyNode);
+			if(propertyNode != parent)
+				parent->append_node(propertyNode);
 		}
 		return parent;
 	}
@@ -125,8 +137,8 @@ XmlDocumentPtr obj::xml::writeXml(ObjectPtr object)
 	XmlDocumentPtr doc = make_shared<XmlDocument>();
 	String rootName = object->value(ELEMENT_NAME, ROOT_NAME);
 	XmlNode* root = doc->allocate_node(node_element, doc->allocate_string(rootName.c_str()));
-	XmlNode* obj = toXml(root, object);
 	doc->append_node(root);
+	XmlNode* obj = toXml(root, object);
 	return doc;
 }
 

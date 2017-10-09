@@ -7,6 +7,7 @@ namespace obj
 {
 using XmlDocument = rapidxml::xml_document<String::value_type>;
 using XmlDocumentPtr = shared_ptr<XmlDocument>;
+using XmlBase = rapidxml::xml_base<String::value_type>;
 using XmlNode = rapidxml::xml_node<String::value_type>;
 using XmlAttribute = rapidxml::xml_attribute<String::value_type>;
 
