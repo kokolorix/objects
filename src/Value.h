@@ -1,8 +1,12 @@
 #pragma once
+//#define _SCL_SCURE_NO_WARNINGS
 
 #include "Thing.h"
 #include <boost/uuid/uuid.hpp>
+//#pragma warning(push)
+//#pragma warning(disable:4996)
 #include <boost/uuid/uuid_io.hpp>
+//#pragma warning(pop)
 #include <boost/uuid/uuid_serialize.hpp>
 #ifdef __MINGW32__
 #pragma GCC diagnostic ignored "-Wconversion-null"
@@ -95,6 +99,7 @@ public:
 	IdType id() const { return _id; }
 	IdType& id() { return _id; }
 	operator String () const { return toString(); }
+	static ValuePtr parse(const String& s);
 	template<typename T>
 	static std::shared_ptr<ValueImpl<T> > make(T v);
 	template<typename T>

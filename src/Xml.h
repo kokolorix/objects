@@ -16,7 +16,7 @@ namespace xml
 ObjectPtr readXml(const XmlDocumentPtr doc);
 ObjectPtr readXml(const XmlDocument& doc);
 ObjectPtr readFile(const Path& filePath);
-ObjectPtr readString(const String& xmlString);
+ObjectPtr readString(String& xmlString);
 XmlDocumentPtr writeXml(ObjectPtr object);
 void writeFile(const Path& filePath, ObjectPtr object);
 String writeString(ObjectPtr object);

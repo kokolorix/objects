@@ -19,6 +19,14 @@ void from_json(const Json &j, ValuePtr &v)
 		ObjectPtr o = j;
 		v = ObjectValue::make(o);
 	}
+	else if (j.is_array())
+	{
+		std::vector<ValuePtr> _v;
+		for (Json::const_iterator i = j.begin(); i != j.end(); ++i)
+			_v.push_back(*i);
+
+		v = VectorValue::make(_v);
+	}
 	else
 	{
 		v = NothingValue<Unknown>::make();
@@ -29,18 +37,18 @@ void from_json(const Json &j, PropertyPtr &p)
 {
 	auto _p = make_shared<Property>();
 
-	if (j.is_array())
-	{
-		std::vector<ValuePtr> v;
-		for (Json::const_iterator i = j.begin(); i != j.end(); ++i)
-			v.push_back(*i);
+	//if (j.is_array())
+	//{
+	//	std::vector<ValuePtr> v;
+	//	for (Json::const_iterator i = j.begin(); i != j.end(); ++i)
+	//		v.push_back(*i);
 
-		_p->value() = VectorValue::make(v);
-	}
-	else
-	{
+	//	_p->value() = VectorValue::make(v);
+	//}
+	//else
+	//{
 		_p->value() = j;
-	}
+	//}
 	p = _p;
 }
 
@@ -101,6 +109,8 @@ void to_json(Json &j, const ObjectPtr &o)
 obj::ObjectPtr obj::js::readJson(const Json& j)
 {
 	 ObjectPtr object = j;
+	 auto& p = object->properties();
+	 std::sort(p.begin(), p.end(), [](PropertyPtr x, PropertyPtr y) {return x->name() < y->name(); });
 	 return object;
 }
 
@@ -109,8 +119,7 @@ obj::ObjectPtr obj::js::readFile(const Path &filePath)
 	 boost::filesystem::ifstream is(filePath);
 	 Json j;
 	 is >> j;
-	 ObjectPtr object = j;
-	 return object;
+	 return readJson(j);
 }
 
 obj::ObjectPtr obj::js::readString(const String &jsonString)
@@ -118,8 +127,7 @@ obj::ObjectPtr obj::js::readString(const String &jsonString)
 	 istringstream is(jsonString);
 	 Json j;
 	 is >> j;
-	 ObjectPtr object = j;
-	 return object;
+	 return readJson(j);
 }
 
 obj::Json obj::js::writeJson(ObjectPtr object)

@@ -59,17 +59,17 @@ void xmlT::simpleTest()
 "				\"nothing\" : null,"
 "				\"object\" : {"
 "				\"currency\": \"USD\","
-"					\"value\" : 42.9900016784668"
+"					\"value\" : 42.99"
 "			},"
-"				\"pi\" : 3.14100003242493"
+"				\"pi\" : 3.141"
 "	}"
 ));
-	//obj1["list"]->push_back(nullptr);
-	//String str1 = xml::writeString(obj1);
-	xml::writeFile("./TestResult.xml", obj1);
-	//ObjectPtr obj2 = xml::readString(str1);
-	//String str2 = xml::writeString(obj2);
-	//assert(str1 == str2);		
-	//assert(obj1 == obj2);
+	xml::writeFile("./obj1.xml", obj1);
+	ObjectPtr obj2 = xml::readFile("./obj1.xml");
+	xml::writeFile("./obj2.xml", obj2);
+	String str1 = xml::writeString(obj1);
+	String str2 = xml::writeString(obj2);
+	assert(str1 == str2);		
+	assert(obj1 == obj2);
 }
 

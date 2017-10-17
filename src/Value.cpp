@@ -1,7 +1,10 @@
 #include "stdafx.h"
+//#define _CRT_SECURE_NO_WARNINGS
 #include "Value.h"
 #include <boost/preprocessor.hpp>
 #include <boost/algorithm/string.hpp>
+#include <regex>
+
 using namespace obj;
 bool registerCreators();
 bool intialized = registerCreators();
@@ -54,3 +57,52 @@ obj::ValuePtr::operator int32_t() const
 	throw ImpossibleCastException(__func__);
 }
 
+ValuePtr obj::Value::parse(const String & s)
+{
+	if (s == "true")
+		return Value::make(true);
+	if (s == "false")
+		return Value::make(false);
+
+	char* e;
+	int32_t i32 = std::strtol(s.c_str(), &e, 0);
+	if (e != s.c_str() && *e == '\0') 
+		return Value::make(i32);
+
+	double d = strtod(s.c_str(), &e);
+	if (e != s.c_str() && *e == '\0') 
+		return Value::make(d);
+
+	static const std::regex rx("[a-f0-9]{8}-[a-f0-9]{4}-4[a-f0-9]{3}-[89aAbB][a-f0-9]{3}-[a-f0-9]{12}");
+	if(std::regex_match(s, rx))
+		return Value::make(lexical_cast<UuId>(s));
+
+	return Value::make(s);
+
+	/*
+	try
+	{
+		return Value::make(std::stoi(s));
+	}
+	catch(std::invalid_argument&){}
+	catch(std::out_of_range&){}
+	try
+	{
+		return Value::make(std::stod(s));
+	}
+	catch(std::invalid_argument&){}
+	catch(std::out_of_range&){}
+	try
+	{
+		return Value::make(lexical_cast<UuId>(s));
+	}
+	catch(std::exception&){}
+
+	if (s == "true")
+		return Value::make(true);
+	if (s == "false")
+		return Value::make(false);
+
+	return Value::make(s);
+	*/
+}
