@@ -22,6 +22,15 @@ PropertyPtr readPropertyFromDb(database& db, IdType id);
 ValuePtr readPropertyValueFromDb(database& db, IdType propertyId);
 ValuePtr readValueFromDb(database& db, IdType id);
 
+
+void obj::db::createDb(const String & dbName)
+{
+}
+
+void obj::db::deleteDb(const String & dbName)
+{
+}
+
 ObjectPtr obj::db::readObject(const String & dbName, IdType id)
 {
 	database db(dbName);

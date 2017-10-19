@@ -66,11 +66,13 @@ void sqlT::simpleTest()
 			R"js(				"pi" : 3.141)js"
 			R"js(	})js"
 		));
-		fs::remove("../test.db3");
-		IdType id1 = db::writeObject("../test.db3", obj1);
-		ObjectPtr obj2 = db::readObject("../test.db3", id1);
-		//IdType id1 = db::writeObject(":memory:", obj1);
-		//ObjectPtr obj2 = db::readObject(":memory:", id1);
+
+		//fs::remove("../test.db3");
+		//IdType id1 = db::writeObject("../test.db3", obj1);
+		//ObjectPtr obj2 = db::readObject("../test.db3", id1);
+		DbHolder db(":memory:");
+		IdType id1 = db.writeObject(obj1);
+		ObjectPtr obj2 = db.readObject(id1);
 
 		String str1 = js::writeJson(obj1).dump(4);
 		String str2 = js::writeJson(obj2).dump(4);
