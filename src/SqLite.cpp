@@ -9,6 +9,8 @@
 using namespace  sqlite;
 using namespace obj;
 
+bool checkDb(database& db, const String & dbName);
+
 IdType getValueTypeId(ValuePtr value);
 
 IdType writeObjectToDb(database& db, ObjectPtr object);
@@ -20,16 +22,21 @@ PropertyPtr readPropertyFromDb(database& db, IdType id);
 ValuePtr readPropertyValueFromDb(database& db, IdType propertyId);
 ValuePtr readValueFromDb(database& db, IdType id);
 
-ObjectPtr obj::db::readObject(const Path & filePath, IdType id)
+ObjectPtr obj::db::readObject(const String & dbName, IdType id)
 {
-	database db(filePath.string());
-	return readObjctFromDb(db, id);
+	database db(dbName);
+	if(checkDb(db, dbName))
+		return readObjctFromDb(db, id);
+	return ObjectPtr();
 }
 
-IdType obj::db::writeObject(const Path & filePath, ObjectPtr object)
+IdType obj::db::writeObject(const String & dbName, ObjectPtr object)
 {
-	database db(filePath.string());
-	return writeObjectToDb(db, object);
+	database db(dbName);
+	checkDb(db, dbName);
+	if(checkDb(db, dbName))
+		return writeObjectToDb(db, object);
+	return IdType();
 }
 
 IdType writeObjectToDb(database& db, ObjectPtr object)
@@ -62,7 +69,7 @@ IdType writePropertyToDb(database &db, IdType objectId, PropertyPtr property)
 	IdType version = 1;
 
 	IdType propertyId(0), valueId(0);
-	auto ps = db << "select id, value from properties where objectId = ? and name = ?;";
+	auto ps = db << "select id, value from PropertyList where ObjectId = ? and Name = ?;";
 	ps << objectId << name;
 	ps >> [&propertyId, &valueId](unique_ptr<int> p, unique_ptr<int> v)
 	{ 
@@ -271,4 +278,236 @@ IdType getValueTypeId(ValuePtr value)
 		return 11;
 	else /*if (auto v = dynamic_pointer_cast<NothingValue<>(value))*/
 		return 12;
+}
+
+bool checkDb(database& db, const String& dbName)
+{
+	static std::set<String> checkedDbs;
+	auto res = checkedDbs.insert(dbName);
+	if (res.second)
+	{
+		bool objectExists = false, propertyExists = false, valueExists = false;
+		bool objectListExists = false, propertyListExists = false;
+		{
+			auto query = db << "SELECT name FROM sqlite_master WHERE type='table' AND name='object';";
+			query >> [&](unique_ptr<String> n)
+			{
+				if(*n == "object")
+					objectExists = true;
+			};
+			if (!objectExists)
+			{
+				auto ddl = db << 
+				"CREATE TABLE object ("
+				"	id      INTEGER PRIMARY KEY"
+				"						 NOT NULL,"
+				"	type    INTEGER REFERENCES object (id) ON DELETE NO ACTION"
+				"														ON UPDATE NO ACTION"
+				"														MATCH SIMPLE,"
+				"	version INTEGER NOT NULL"
+				"						 DEFAULT (1) "
+				");"
+				;
+				ddl.execute();
+				db << "begin;";
+				db << "INSERT INTO object (type, version) VALUES (1, 1);";
+				db << "INSERT INTO object (type, version) VALUES (1, 1);";
+				db << "INSERT INTO object (type, version) VALUES (1, 1);";
+				db << "INSERT INTO object (type, version) VALUES (2, 1);";
+				db << "INSERT INTO object (type, version) VALUES (2, 1);";
+				db << "INSERT INTO object (type, version) VALUES (2, 1);";
+				db << "INSERT INTO object (type, version) VALUES (2, 1);";
+				db << "INSERT INTO object (type, version) VALUES (2, 1);";
+				db << "INSERT INTO object (type, version) VALUES (2, 1);";
+				db << "INSERT INTO object (type, version) VALUES (2, 1);";
+				db << "INSERT INTO object (type, version) VALUES (2, 1);";
+				db << "INSERT INTO object (type, version) VALUES (2, 1);";				
+				db << "commit;";
+				objectExists = true;
+			}
+		}
+		{
+			auto query = db << "SELECT name FROM sqlite_master WHERE type='table' AND name='property';";
+			query >> [&](unique_ptr<String> n)
+			{
+				if(*n == "property")
+					propertyExists = true;
+			};
+			if (!propertyExists)
+			{
+				auto ddl = db << 
+				"CREATE TABLE property ("
+				"	id      INTEGER PRIMARY KEY,"
+				"	name    STRING,"
+				"	object  INTEGER REFERENCES object (id) ON DELETE CASCADE"
+				"														ON UPDATE CASCADE"
+				"														MATCH SIMPLE"
+				"						 NOT NULL,"
+				"	version INTEGER NOT NULL"
+				"						 DEFAULT (1) "
+				");"
+				;
+				ddl.execute();
+				db << "begin;";
+				db << "INSERT INTO property (name, object, version) VALUES ('Name', 1, 1);";
+				db << "INSERT INTO property (name, object, version) VALUES ('Name', 2, 1);";
+				db << "INSERT INTO property (name, object, version) VALUES ('Name', 3, 1);";
+				db << "INSERT INTO property (name, object, version) VALUES ('Name', 4, 1);";
+				db << "INSERT INTO property (name, object, version) VALUES ('Name', 5, 1);";
+				db << "INSERT INTO property (name, object, version) VALUES ('Name', 6, 1);";
+				db << "INSERT INTO property (name, object, version) VALUES ('Name', 7, 1);";
+				db << "INSERT INTO property (name, object, version) VALUES ('Name', 8, 1);";
+				db << "INSERT INTO property (name, object, version) VALUES ('Name', 9, 1);";
+				db << "INSERT INTO property (name, object, version) VALUES ('Name', 10, 1);";
+				db << "INSERT INTO property (name, object, version) VALUES ('Name', 11, 1);";
+				db << "INSERT INTO property (name, object, version) VALUES ('Name', 12, 1);";
+				db << "INSERT INTO property (name, object, version) VALUES ('Description', 1, 1);";
+				db << "INSERT INTO property (name, object, version) VALUES ('Description', 2, 1);";
+				db << "INSERT INTO property (name, object, version) VALUES ('Description', 3, 1);";
+				db << "INSERT INTO property (name, object, version) VALUES ('Description', 4, 1);";
+				db << "INSERT INTO property (name, object, version) VALUES ('Description', 5, 1);";
+				db << "INSERT INTO property (name, object, version) VALUES ('Description', 6, 1);";
+				db << "INSERT INTO property (name, object, version) VALUES ('Description', 7, 1);";
+				db << "INSERT INTO property (name, object, version) VALUES ('Description', 8, 1);";
+				db << "INSERT INTO property (name, object, version) VALUES ('Description', 9, 1);";
+				db << "INSERT INTO property (name, object, version) VALUES ('Description', 10, 1);";
+				db << "INSERT INTO property (name, object, version) VALUES ('Description', 11, 1);";
+				db << "INSERT INTO property (name, object, version) VALUES ('Description', 12, 1);";
+				db << "commit;";
+				propertyExists = true;
+			}
+		}
+		{
+			auto query = db << "SELECT name FROM sqlite_master WHERE type='table' AND name='value';";
+			query >> [&](unique_ptr<String> n)
+			{
+				if(*n == "value")
+					valueExists = true;
+			};
+			if (!valueExists)
+			{
+				auto ddl = db << 
+				"CREATE TABLE value ("
+				"	id       INTEGER PRIMARY KEY,"
+				"	type             REFERENCES object (id) ON DELETE CASCADE"
+				"														 ON UPDATE CASCADE"
+				"														 MATCH SIMPLE,"
+				"	property         REFERENCES property (id) ON DELETE CASCADE"
+				"															ON UPDATE CASCADE"
+				"															MATCH SIMPLE,"
+				"	value    STRING,"
+				"	parent           REFERENCES value (id) ON DELETE CASCADE"
+				"														ON UPDATE CASCADE"
+				"														MATCH SIMPLE,"
+				"	version  INTEGER DEFAULT (1) "
+				");"
+				;
+				ddl.execute();
+				db << "begin;";
+				db << "INSERT INTO value (type, property, value, parent, version) VALUES (4, 1, 'BaseType', NULL, 1);";
+				db << "INSERT INTO value (type, property, value, parent, version) VALUES (4, 2, 'ValueType', NULL, 1);";
+				db << "INSERT INTO value (type, property, value, parent, version) VALUES (4, 3, 'ObjectType', NULL, 1);";
+				db << "INSERT INTO value (type, property, value, parent, version) VALUES (4, 4, 'StringValue', NULL, 1);";
+				db << "INSERT INTO value (type, property, value, parent, version) VALUES (4, 5, 'BooleanValue', NULL, 1);";
+				db << "INSERT INTO value (type, property, value, parent, version) VALUES (4, 6, 'Int32Value', NULL, 1);";
+				db << "INSERT INTO value (type, property, value, parent, version) VALUES (4, 7, 'UInt32Value', NULL, 1);";
+				db << "INSERT INTO value (type, property, value, parent, version) VALUES (4, 8, 'FloatValue', NULL, 1);";
+				db << "INSERT INTO value (type, property, value, parent, version) VALUES (4, 9, 'UuIdValue', NULL, 1);";
+				db << "INSERT INTO value (type, property, value, parent, version) VALUES (4, 10, 'ObjectValue', NULL, 1);";
+				db << "INSERT INTO value (type, property, value, parent, version) VALUES (4, 11, 'VectorValue', NULL, 1);";
+				db << "INSERT INTO value (type, property, value, parent, version) VALUES (4, 12, 'NothingValue', NULL, 1);";
+				db << "INSERT INTO value (type, property, value, parent, version) VALUES (4, 13, 'Basistyp für alle Typen', NULL, 1);";
+				db << "INSERT INTO value (type, property, value, parent, version) VALUES (4, 14, 'Basistyp für alle Werttypen', NULL, 1);";
+				db << "INSERT INTO value (type, property, value, parent, version) VALUES (4, 15, 'Basistyp für alle Objekttypen', NULL, 1);";
+				db << "INSERT INTO value (type, property, value, parent, version) VALUES (4, 16, 'Werttyp für Strings', NULL, 1);";
+				db << "INSERT INTO value (type, property, value, parent, version) VALUES (4, 17, 'Werttyp für Booleans', NULL, 1);";
+				db << "INSERT INTO value (type, property, value, parent, version) VALUES (4, 18, 'Werttyp für vorzeichenbehaftete 32bit Integers', NULL, 1);";
+				db << "INSERT INTO value (type, property, value, parent, version) VALUES (4, 19, 'Werttyp für vorzeichenlose 32bit Integers', NULL, 1);";
+				db << "INSERT INTO value (type, property, value, parent, version) VALUES (4, 20, 'Werttyp für Fliesskommazahlen', NULL, 1);";
+				db << "INSERT INTO value (type, property, value, parent, version) VALUES (4, 21, 'Werttyp für GUIDs (Global unique identifier)', NULL, 1);";
+				db << "INSERT INTO value (type, property, value, parent, version) VALUES (4, 22, 'Werttyp für Objketreferenzen', NULL, 1);";
+				db << "INSERT INTO value (type, property, value, parent, version) VALUES (4, 23, 'Werttyp für Arrays von Werten', NULL, 1);";
+				db << "INSERT INTO value (type, property, value, parent, version) VALUES (4, 24, 'Werttyp für Nichts', NULL, 1);";
+				db << "commit;";
+				valueExists = true;
+			}
+			{
+				auto query = db << "SELECT name FROM sqlite_master WHERE type='view' AND name='PropertyList';";
+				query >> [&](unique_ptr<String> n)
+				{
+					if (*n == "PropertyList")
+						propertyListExists = true;
+				};
+				if (!propertyListExists)
+				{
+					auto ddl = db << 
+					"CREATE VIEW PropertyList AS "
+					"	SELECT p.id AS Id,"
+					"		 p.name AS Name,"
+					"		 v.value AS Value,"
+					"		 vt.value AS ValueType,"
+					"		 v.id AS ValueId,"
+					"		 v.type AS ValueTypeId,"
+					"		 ovt.value AS ObjectType,"
+					"		 p.object AS ObjectId,"
+					"		 o.type AS ObjectTypeId"
+					"	FROM property p"
+					"		 LEFT JOIN"
+					"		 value v ON p.id = v.property"
+					"		 LEFT JOIN"
+					"		 property pt ON pt.object = v.type AND "
+					"							 pt.name = 'Name'"
+					"		 LEFT JOIN"
+					"		 value vt ON pt.id = vt.property"
+					"		 LEFT JOIN"
+					"		 object o ON o.id = p.object"
+					"		 LEFT JOIN"
+					"		 property opt ON opt.object = o.type AND "
+					"							  opt.name = 'Name'"
+					"		 LEFT JOIN"
+					"		 value ovt ON opt.id = ovt.property"
+					";"
+					;
+					ddl.execute();
+					propertyListExists = true;
+				}
+			}
+			{
+				auto query = db << "SELECT name FROM sqlite_master WHERE type='view' AND name='ObjectList';";
+				query >> [&](unique_ptr<String> n)
+				{
+					if (*n == "ObjectList")
+						objectListExists = true;
+				};
+				if (!objectListExists)
+				{
+					auto ddl = db <<
+						"CREATE VIEW ObjectList AS "
+						"	SELECT o.id AS Id,"
+						"		 p1.Value AS Name,"
+						"		 p2.Value AS Description,"
+						"		 o.type AS TypeId,"
+						"		 p3.Value AS TypeName"
+						"	FROM object AS o"
+						"		 LEFT OUTER JOIN"
+						"		 PropertyList AS p1 ON o.id = p1.ObjectId AND "
+						"									p1.Name = 'Name'"
+						"		 LEFT OUTER JOIN"
+						"		 PropertyList AS p2 ON o.id = p2.ObjectId AND "
+						"									p2.Name = 'Description'"
+						"		 LEFT OUTER JOIN"
+						"		 PropertyList AS p3 ON o.type = p3.ObjectId AND "
+						"									p3.Name = 'Name'"
+						";"
+						;
+					ddl.execute();
+					objectListExists = true;
+				}
+			}
+		}
+
+		return  objectExists && propertyExists && valueExists && objectListExists && propertyListExists;
+	}
+	else
+		return true;
 }

@@ -17,11 +17,11 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)lib\xml\xmlParser.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)src\Json.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)lib\json\json.hpp" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)sc\SqLite.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)lib\xml\rapidxml.hpp" />
     <ClInclude Include="$(MSBuildThisFileDirectory)lib\xml\rapidxml_iterators.hpp" />
     <ClInclude Include="$(MSBuildThisFileDirectory)lib\xml\rapidxml_print.hpp" />
     <ClInclude Include="$(MSBuildThisFileDirectory)lib\xml\rapidxml_utils.hpp" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)src\SqLite.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)src\Xml.h" />
   </ItemGroup>
   <ItemGroup>

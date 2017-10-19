@@ -1,5 +1,7 @@
 {
     "files.associations": {
+        "*.groupproj": "xml",
+        "*.cbproj": "xml",
         "iostream": "cpp",
         "array": "cpp",
         "atomic": "cpp",
@@ -56,7 +58,8 @@
         "locale": "cpp",
         "xlocmes": "cpp",
         "xlocnum": "cpp",
-        "xloctime": "cpp"
+        "xloctime": "cpp",
+        "future": "cpp"
     },
 "editor.tabSize": 3
 }

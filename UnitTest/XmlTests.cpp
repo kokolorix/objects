@@ -43,27 +43,27 @@ void xmlT::simpleTest()
 	//	} }
 	//});
 	ObjectPtr obj1 = js::readJson(Json::parse(
-"	{"
-"		\"answer\": {"
-"		\"everything\": 42"
-"	},"
-"		\"happy\" : true,"
-"			\"list\" : ["
-"				1,"
-"					0,"
-"					2,"
-"					{ \"einWert\":35 },"
-"					[9,8,7]"
-"			],"
-"			\"name\": \"Niels\","
-"				\"nothing\" : null,"
-"				\"object\" : {"
-"				\"currency\": \"USD\","
-"					\"value\" : 42.99"
-"			},"
-"				\"pi\" : 3.141"
-"	}"
-));
+		R"js(	{)js"
+		R"js(		"answer": {)js"
+		R"js(		"everything": 42)js"
+		R"js(	},)js"
+		R"js(		"happy" : true,)js"
+		R"js(			"list" : [)js"
+		R"js(				1,)js"
+		R"js(					0,)js"
+		R"js(					2,)js"
+		R"js(					{ "einWert":35 },)js"
+		R"js(					[9,8,7])js"
+		R"js(			],)js"
+		R"js(			"name": "Niels",)js"
+		R"js(				"nothing" : null,)js"
+		R"js(				"object" : {)js"
+		R"js(				"currency": "USD",)js"
+		R"js(					"value" : 42.99)js"
+		R"js(			},)js"
+		R"js(				"pi" : 3.141)js"
+		R"js(	})js"
+	));
 	xml::writeFile("./obj1.xml", obj1);
 	ObjectPtr obj2 = xml::readFile("./obj1.xml");
 	xml::writeFile("./obj2.xml", obj2);

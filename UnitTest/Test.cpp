@@ -112,6 +112,9 @@ using OutputStream = output_stream<char>;
 
 bool NameChecker::operator()(const String & name)
 {
+	if (_pattern == "*")
+		return true;
+
 	if(_pattern == name)
 		return true;
 
