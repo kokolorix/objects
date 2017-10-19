@@ -6,10 +6,11 @@
 #include <sqlite/sqlite_modern_cpp.h>
 #pragma warning(pop)
 
+#include <map>
+
 using namespace  sqlite;
 using namespace obj;
 
-bool checkDb(database& db, const String & dbName);
 
 IdType getValueTypeId(ValuePtr value);
 
@@ -22,29 +23,36 @@ PropertyPtr readPropertyFromDb(database& db, IdType id);
 ValuePtr readPropertyValueFromDb(database& db, IdType propertyId);
 ValuePtr readValueFromDb(database& db, IdType id);
 
-
-void obj::db::createDb(const String & dbName)
+namespace
 {
+bool checkDb(database& db, const String & dbName);
+enum DbChacheOption {FIND_OR_CREATE = 1, FIND, REMOVE };
+using DbPtr = shared_ptr<database>;
+DbPtr cacheDb(const String & dbName, DbChacheOption option);
 }
 
-void obj::db::deleteDb(const String & dbName)
+void obj::db::initializeDb(const String & dbName)
 {
+	cacheDb(dbName, FIND_OR_CREATE);
+}
+void obj::db::removeDb(const String & dbName)
+{
+	cacheDb(dbName, REMOVE);
 }
 
 ObjectPtr obj::db::readObject(const String & dbName, IdType id)
 {
-	database db(dbName);
-	if(checkDb(db, dbName))
-		return readObjctFromDb(db, id);
+	DbPtr db = cacheDb(dbName, FIND_OR_CREATE);
+	//if(checkDb(*db, dbName))
+		return readObjctFromDb(*db, id);
 	return ObjectPtr();
 }
 
 IdType obj::db::writeObject(const String & dbName, ObjectPtr object)
 {
-	database db(dbName);
-	checkDb(db, dbName);
-	if(checkDb(db, dbName))
-		return writeObjectToDb(db, object);
+	DbPtr db = cacheDb(dbName, FIND_OR_CREATE);
+	//if(checkDb(*db, dbName))
+		return writeObjectToDb(*db, object);
 	return IdType();
 }
 
@@ -289,6 +297,8 @@ IdType getValueTypeId(ValuePtr value)
 		return 12;
 }
 
+namespace
+{
 bool checkDb(database& db, const String& dbName)
 {
 	static std::set<String> checkedDbs;
@@ -301,22 +311,22 @@ bool checkDb(database& db, const String& dbName)
 			auto query = db << "SELECT name FROM sqlite_master WHERE type='table' AND name='object';";
 			query >> [&](unique_ptr<String> n)
 			{
-				if(*n == "object")
+				if (*n == "object")
 					objectExists = true;
 			};
 			if (!objectExists)
 			{
-				auto ddl = db << 
-				"CREATE TABLE object ("
-				"	id      INTEGER PRIMARY KEY"
-				"						 NOT NULL,"
-				"	type    INTEGER REFERENCES object (id) ON DELETE NO ACTION"
-				"														ON UPDATE NO ACTION"
-				"														MATCH SIMPLE,"
-				"	version INTEGER NOT NULL"
-				"						 DEFAULT (1) "
-				");"
-				;
+				auto ddl = db <<
+					"CREATE TABLE object ("
+					"	id      INTEGER PRIMARY KEY"
+					"						 NOT NULL,"
+					"	type    INTEGER REFERENCES object (id) ON DELETE NO ACTION"
+					"														ON UPDATE NO ACTION"
+					"														MATCH SIMPLE,"
+					"	version INTEGER NOT NULL"
+					"						 DEFAULT (1) "
+					");"
+					;
 				ddl.execute();
 				db << "begin;";
 				db << "INSERT INTO object (type, version) VALUES (1, 1);";
@@ -330,7 +340,7 @@ bool checkDb(database& db, const String& dbName)
 				db << "INSERT INTO object (type, version) VALUES (2, 1);";
 				db << "INSERT INTO object (type, version) VALUES (2, 1);";
 				db << "INSERT INTO object (type, version) VALUES (2, 1);";
-				db << "INSERT INTO object (type, version) VALUES (2, 1);";				
+				db << "INSERT INTO object (type, version) VALUES (2, 1);";
 				db << "commit;";
 				objectExists = true;
 			}
@@ -339,23 +349,23 @@ bool checkDb(database& db, const String& dbName)
 			auto query = db << "SELECT name FROM sqlite_master WHERE type='table' AND name='property';";
 			query >> [&](unique_ptr<String> n)
 			{
-				if(*n == "property")
+				if (*n == "property")
 					propertyExists = true;
 			};
 			if (!propertyExists)
 			{
-				auto ddl = db << 
-				"CREATE TABLE property ("
-				"	id      INTEGER PRIMARY KEY,"
-				"	name    STRING,"
-				"	object  INTEGER REFERENCES object (id) ON DELETE CASCADE"
-				"														ON UPDATE CASCADE"
-				"														MATCH SIMPLE"
-				"						 NOT NULL,"
-				"	version INTEGER NOT NULL"
-				"						 DEFAULT (1) "
-				");"
-				;
+				auto ddl = db <<
+					"CREATE TABLE property ("
+					"	id      INTEGER PRIMARY KEY,"
+					"	name    STRING,"
+					"	object  INTEGER REFERENCES object (id) ON DELETE CASCADE"
+					"														ON UPDATE CASCADE"
+					"														MATCH SIMPLE"
+					"						 NOT NULL,"
+					"	version INTEGER NOT NULL"
+					"						 DEFAULT (1) "
+					");"
+					;
 				ddl.execute();
 				db << "begin;";
 				db << "INSERT INTO property (name, object, version) VALUES ('Name', 1, 1);";
@@ -390,27 +400,27 @@ bool checkDb(database& db, const String& dbName)
 			auto query = db << "SELECT name FROM sqlite_master WHERE type='table' AND name='value';";
 			query >> [&](unique_ptr<String> n)
 			{
-				if(*n == "value")
+				if (*n == "value")
 					valueExists = true;
 			};
 			if (!valueExists)
 			{
-				auto ddl = db << 
-				"CREATE TABLE value ("
-				"	id       INTEGER PRIMARY KEY,"
-				"	type             REFERENCES object (id) ON DELETE CASCADE"
-				"														 ON UPDATE CASCADE"
-				"														 MATCH SIMPLE,"
-				"	property         REFERENCES property (id) ON DELETE CASCADE"
-				"															ON UPDATE CASCADE"
-				"															MATCH SIMPLE,"
-				"	value    STRING,"
-				"	parent           REFERENCES value (id) ON DELETE CASCADE"
-				"														ON UPDATE CASCADE"
-				"														MATCH SIMPLE,"
-				"	version  INTEGER DEFAULT (1) "
-				");"
-				;
+				auto ddl = db <<
+					"CREATE TABLE value ("
+					"	id       INTEGER PRIMARY KEY,"
+					"	type             REFERENCES object (id) ON DELETE CASCADE"
+					"														 ON UPDATE CASCADE"
+					"														 MATCH SIMPLE,"
+					"	property         REFERENCES property (id) ON DELETE CASCADE"
+					"															ON UPDATE CASCADE"
+					"															MATCH SIMPLE,"
+					"	value    STRING,"
+					"	parent           REFERENCES value (id) ON DELETE CASCADE"
+					"														ON UPDATE CASCADE"
+					"														MATCH SIMPLE,"
+					"	version  INTEGER DEFAULT (1) "
+					");"
+					;
 				ddl.execute();
 				db << "begin;";
 				db << "INSERT INTO value (type, property, value, parent, version) VALUES (4, 1, 'BaseType', NULL, 1);";
@@ -449,34 +459,34 @@ bool checkDb(database& db, const String& dbName)
 				};
 				if (!propertyListExists)
 				{
-					auto ddl = db << 
-					"CREATE VIEW PropertyList AS "
-					"	SELECT p.id AS Id,"
-					"		 p.name AS Name,"
-					"		 v.value AS Value,"
-					"		 vt.value AS ValueType,"
-					"		 v.id AS ValueId,"
-					"		 v.type AS ValueTypeId,"
-					"		 ovt.value AS ObjectType,"
-					"		 p.object AS ObjectId,"
-					"		 o.type AS ObjectTypeId"
-					"	FROM property p"
-					"		 LEFT JOIN"
-					"		 value v ON p.id = v.property"
-					"		 LEFT JOIN"
-					"		 property pt ON pt.object = v.type AND "
-					"							 pt.name = 'Name'"
-					"		 LEFT JOIN"
-					"		 value vt ON pt.id = vt.property"
-					"		 LEFT JOIN"
-					"		 object o ON o.id = p.object"
-					"		 LEFT JOIN"
-					"		 property opt ON opt.object = o.type AND "
-					"							  opt.name = 'Name'"
-					"		 LEFT JOIN"
-					"		 value ovt ON opt.id = ovt.property"
-					";"
-					;
+					auto ddl = db <<
+						"CREATE VIEW PropertyList AS "
+						"	SELECT p.id AS Id,"
+						"		 p.name AS Name,"
+						"		 v.value AS Value,"
+						"		 vt.value AS ValueType,"
+						"		 v.id AS ValueId,"
+						"		 v.type AS ValueTypeId,"
+						"		 ovt.value AS ObjectType,"
+						"		 p.object AS ObjectId,"
+						"		 o.type AS ObjectTypeId"
+						"	FROM property p"
+						"		 LEFT JOIN"
+						"		 value v ON p.id = v.property"
+						"		 LEFT JOIN"
+						"		 property pt ON pt.object = v.type AND "
+						"							 pt.name = 'Name'"
+						"		 LEFT JOIN"
+						"		 value vt ON pt.id = vt.property"
+						"		 LEFT JOIN"
+						"		 object o ON o.id = p.object"
+						"		 LEFT JOIN"
+						"		 property opt ON opt.object = o.type AND "
+						"							  opt.name = 'Name'"
+						"		 LEFT JOIN"
+						"		 value ovt ON opt.id = ovt.property"
+						";"
+						;
 					ddl.execute();
 					propertyListExists = true;
 				}
@@ -519,4 +529,44 @@ bool checkDb(database& db, const String& dbName)
 	}
 	else
 		return true;
+}
+DbPtr cacheDb(const String & dbName, DbChacheOption option)
+{
+	static std::map<String, DbPtr> dbCache;
+
+	switch (option)
+	{
+	case FIND_OR_CREATE:
+	{
+		auto it = dbCache.find(dbName);
+		if (it == dbCache.end())
+		{
+			it = dbCache.insert(std::make_pair(dbName, make_shared<database>(dbName))).first;
+			if (!checkDb(*it->second, dbName))
+				throw obj::NotFoundException("Not initialized database");
+		}
+		return it->second;
+	}
+	case FIND:
+	{
+		auto it = dbCache.find(dbName);
+		if (it == dbCache.end())
+			return DbPtr();
+		return it->second;
+	}
+	case REMOVE:
+	{
+		auto it = dbCache.find(dbName);
+		if (it == dbCache.end())
+			return DbPtr();
+		DbPtr db = it->second;
+		dbCache.erase(it);
+		return db;
+	}
+	default:
+		return DbPtr();
+	}
+	throw NotImplementetException(Format("No valid Option: '%1%'") % option);
+}
+
 }

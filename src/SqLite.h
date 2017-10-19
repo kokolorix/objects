@@ -6,8 +6,8 @@ namespace obj
 {
 namespace db
 {
-void createDb(const String& dbName);
-void deleteDb(const String& dbName);
+void initializeDb(const String& dbName);
+void removeDb(const String& dbName);
 ObjectPtr readObject(const String& dbName, IdType id);
 IdType writeObject(const String& dbName, ObjectPtr object);
 }
@@ -15,11 +15,11 @@ struct DbHolder
 {
 	DbHolder(const String& dbName) : _name(dbName)
 	{
-		db::createDb(_name);
+		db::initializeDb(_name);
 	}
 	virtual ~DbHolder()
 	{
-		db::deleteDb(_name);
+		db::removeDb(_name);
 	}
 	ObjectPtr readObject(IdType id)
 	{

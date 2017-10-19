@@ -46,6 +46,7 @@ void sqlT::simpleTest()
 		//ObjectPtr obj1 = js::readJson(j); //obj1->id() = 13;
 		ObjectPtr obj1 = js::readJson(Json::parse(
 			R"js(	{)js"
+			R"js(		"Description": "Test Objekt for SqLiteTest",)js"
 			R"js(		"answer": {)js"
 			R"js(		"everything": 42)js"
 			R"js(	},)js"
@@ -68,8 +69,7 @@ void sqlT::simpleTest()
 		));
 
 		//fs::remove("../test.db3");
-		//IdType id1 = db::writeObject("../test.db3", obj1);
-		//ObjectPtr obj2 = db::readObject("../test.db3", id1);
+		//DbHolder db("../test.db3");
 		DbHolder db(":memory:");
 		IdType id1 = db.writeObject(obj1);
 		ObjectPtr obj2 = db.readObject(id1);

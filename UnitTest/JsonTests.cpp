@@ -72,6 +72,14 @@ obj::TestResult obj::Test::JsonTests::runTest()
 		 R"js(				"pi" : 3.141)js"
 		 R"js(	})js"
 		));
+
+	ObjectPtr obj2 = js::readJson(js::writeJson(obj1));
+
+	String str1 = js::writeJson(obj1).dump(4);
+	String str2 = js::writeJson(obj2).dump(4);
+	assert(str1 == str2);
+	assert(obj1 == obj2);
+
 	//assert(j1 == j2);
 
 	//int32_t id = *Id->value();

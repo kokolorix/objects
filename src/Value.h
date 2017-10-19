@@ -37,6 +37,17 @@ template<>
 inline obj::String boost::lexical_cast(const bool& v) { return v ? obj::String("true") : obj::String("false"); }
 
 template<>
+inline bool boost::lexical_cast(const obj::String& str)
+{ 
+	if (str == "true")
+		return true;
+	else if(str == "false")
+		return false;
+	else
+		throw obj::ImpossibleCastException(obj::Format("'%1%' is neither true nor false"));
+}
+
+template<>
 inline obj::UuId boost::lexical_cast(const obj::String& str) { return obj::generateIdFromString(str); }
 
 namespace obj

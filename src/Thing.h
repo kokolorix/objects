@@ -24,6 +24,12 @@ namespace obj
 	using Path = fs::path;
 }
 
+#include <boost/format.hpp>
+namespace obj
+{
+using Format = boost::format;
+}
+
 
 namespace obj
 {
@@ -31,6 +37,21 @@ namespace obj
 struct Exception : public std::exception
 {
 	Exception(const char *msg) : _msg(msg) {}
+	Exception(const String& msg) : _msg(msg) {}
+	Exception(Format& format) : _msg(format.str()) {}
+	//template<typename T, typename... Targs>
+	//void Exception(Format& format, T value, Targs... Fargs) // recursive variadic function
+	//{
+
+		//for (; *format != '\0'; format++) {
+		//	if (*format == '%') {
+		//		std::cout << value;
+		//		tprintf(format + 1, Fargs...); // recursive call
+		//		return;
+		//	}
+		//	std::cout << *format;
+		//}
+	//}
 	virtual const char *what() const noexcept override { return _msg.c_str(); }
 
 private:
