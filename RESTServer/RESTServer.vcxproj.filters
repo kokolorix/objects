@@ -24,31 +24,31 @@
     <ClInclude Include="targetver.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\web_server\connection.hpp">
+    <ClInclude Include="..\lib\web_server\connection.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\web_server\connection_manager.hpp">
+    <ClInclude Include="..\lib\web_server\connection_manager.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\web_server\header.hpp">
+    <ClInclude Include="..\lib\web_server\header.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\web_server\mime_types.hpp">
+    <ClInclude Include="..\lib\web_server\mime_types.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\web_server\reply.hpp">
+    <ClInclude Include="..\lib\web_server\reply.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\web_server\request.hpp">
+    <ClInclude Include="..\lib\web_server\request.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\web_server\request_handler.hpp">
+    <ClInclude Include="..\lib\web_server\request_handler.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\web_server\request_parser.hpp">
+    <ClInclude Include="..\lib\web_server\request_parser.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\web_server\server.hpp">
+    <ClInclude Include="..\lib\web_server\server.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
