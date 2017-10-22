@@ -25,3 +25,10 @@ ValuePtr obj::Object::value(const String & name, ValuePtr default)
 {
 	return default;
 }
+
+ObjectPtr& ObjectPtr::operator+=(PropertyPtr p)
+{
+	(*this)->properties().push_back(p);
+	return *this;
+}
+

@@ -270,7 +270,7 @@ ValuePtr readValueFromDb(database & db, IdType id)
 			value = vectorValue;
 		}
 		else if (typeId == 12)
-			value = NothingValue<Unknown>::make();
+			value = Value::make();
 	};
 	return value;
 

@@ -2,6 +2,7 @@
 
 #include "Thing.h"
 #include "Property.h"
+#include "Value.h"
 
 namespace obj
 {
@@ -47,7 +48,7 @@ class Object : public Thing
 		if (p)
 			return p->value();
 		else
-			return NothingValue<Unknown>::make();
+			return Value::make();
 	}
 
 	PropertyVector &properties() { return _properties; }
@@ -75,8 +76,26 @@ inline Result<ObjectPtr> &obj::Result<ObjectPtr>::operator=(ValuePtr value)
 		_container->properties().push_back(Property::make(_name, value));
 	return *this;
 }
-inline Result<ObjectPtr> ObjectPtr::operator[](String name)
+template <>
+inline Result<ObjectPtr> &obj::Result<ObjectPtr>::operator+=(ValuePtr value)
 {
+	VectorValuePtr v = *this;
+	if (v)
+		const_cast<ValuePtrVector&>(v->value()).push_back(value);
+	else
+		throw ImpossibleCastException(Format("'%1%' is not from type VectorValue") % typeid(*_result).name());
+	return *this;
+}
+template<>
+inline ValuePtr & Result<ObjectPtr>::operator[](size_t i)
+{
+	VectorValuePtr v = *this;
+	if (v)
+		return const_cast<ValuePtrVector&>(v->value()).at(i);
+	throw ImpossibleCastException(Format("'%1%' is not from type VectorValue") % typeid(*_result).name());
+}
+inline Result<ObjectPtr> ObjectPtr::operator[](String name)
+{	
 	return Result<ObjectPtr>(name, *this, (*this)->at(name));
 }
 inline ObjectPtr Object::make() { return std::make_shared<Object>(); }

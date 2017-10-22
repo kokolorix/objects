@@ -29,7 +29,7 @@ void from_json(const Json &j, ValuePtr &v)
 	}
 	else
 	{
-		v = NothingValue<Unknown>::make();
+		v = Value::make();
 	}
 }
 

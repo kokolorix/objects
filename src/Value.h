@@ -31,6 +31,8 @@ using IdType = uint32_t;
 extern const IdType nullId;
 
 class Value;
+class Property;
+using PropertyPtr = shared_ptr<Property>;
 }
 
 template<>
@@ -80,11 +82,18 @@ private:
 	ValuePtr _result;
 	
 public:
-	Result& operator =(ValuePtr r) { return *this; }
+	Result& operator =(ValuePtr r);
+	Result& operator +=(ValuePtr r);
+	ValuePtr& operator [] (size_t i);
+	const Value& operator * () const { return *_result; }
+	ValuePtr operator -> () { return _result; }
 	operator ValuePtr () { return _result; }
-	operator String () { return _result; }
+	operator String () { return _name; }
 	template<class ResT>
 	operator shared_ptr<ResT>() { return dynamic_pointer_cast<ResT>(_result); }
+
+public:
+
 };
 
 class Object;
@@ -93,6 +102,7 @@ struct ObjectPtr : public shared_ptr<Object>
 	using Base = shared_ptr<Object>;
 	using Base::Base;
 	Result<ObjectPtr> operator [] (String name);
+	ObjectPtr& operator += (PropertyPtr p);
 };
 
 using ObjectPtrVector = std::vector<ObjectPtr>;
@@ -111,10 +121,15 @@ public:
 	IdType& id() { return _id; }
 	operator String () const { return toString(); }
 	static ValuePtr parse(const String& s);
+
+	static ValuePtr make();
+	static ValuePtr make(std::initializer_list<ValuePtr> v);
+
 	template<typename T>
-	static std::shared_ptr<ValueImpl<T> > make(T v);
+	static ValuePtr make(T v);
 	template<typename T>
-	static std::shared_ptr<ValueImpl<T> > make(IdType id, T v);
+	static ValuePtr make(IdType id, T v);
+
 protected:
 	IdType _id;
 };
@@ -124,9 +139,9 @@ template <typename T = Unknown>
 class NothingValue : public Value
 {
 public:
-	static std::shared_ptr<NothingValue<T>> make()
+	static shared_ptr<NothingValue<T>> make()
 	{
-		return std::make_shared<NothingValue<T>>();
+		return make_shared<NothingValue<T>>();
 	}
 	virtual String toString() const  override { return String(); }
 	virtual bool operator<(const Thing & other) const override
@@ -144,7 +159,7 @@ public:
 			return false;
 	}
 };
-using NothingValuePtr = std::shared_ptr<NothingValue<Unknown>>;
+using NothingValuePtr = shared_ptr<NothingValue<Unknown>>;
 
 template <typename T>
 class ValueImpl : public Value
@@ -175,12 +190,12 @@ public:
 
 	static std::shared_ptr<ValueImpl<T>> make(T v)
 	{
-		return std::make_shared<ValueImpl<T>>(v);
+		return make_shared<ValueImpl<T>>(v);
 	}
 
 	virtual String toString() const
 	{
-		return boost::lexical_cast<String>(_value);
+		return lexical_cast<String>(_value);
 	}
 	
 private:
@@ -188,10 +203,14 @@ private:
 };
 
 template<typename T>
-inline std::shared_ptr<ValueImpl<T>> Value::make(T v){	return std::make_shared<ValueImpl<T>>(v);}
+inline ValuePtr Value::make(T v){	return make_shared<ValueImpl<T>>(v);}
+template<>
+inline ValuePtr Value::make(const char* v){	return make_shared<ValueImpl<String>>(v);}
 
 template<typename T>
-inline std::shared_ptr<ValueImpl<T>> Value::make(IdType id, T v){	return std::make_shared<ValueImpl<T>>(id, v);}
+inline ValuePtr Value::make(IdType id, T v){	return make_shared<ValueImpl<T>>(id, v);}
+template<>
+inline ValuePtr Value::make(IdType id, const char* v){	return make_shared<ValueImpl<String>>(id, v);}
 
 using StringValue = const ValueImpl<String>;
 using StringValuePtr = std::shared_ptr<StringValue>;
@@ -230,9 +249,10 @@ template<>
 String ObjectValue::toString() const;
 
 using VectorValue = const ValueImpl<ValuePtrVector>;
-using VectorValuePtr = std::shared_ptr<VectorValue>;
+using VectorValuePtr = shared_ptr<VectorValue>;
 template<>
 String VectorValue::toString() const;
+
 inline bool operator < (ValuePtr x, ValuePtr y)
 {
 	bool result = (x.get() && y.get()) ? (*x < *y) : x.get() < y.get();
@@ -243,9 +263,22 @@ inline bool operator == (ValuePtr x, ValuePtr y)
 	bool result = x.get() == y.get() || (x.get() && y.get() && !(*x < *y) && !(*y < *x));
 	return result;
 }
-
-}
-template< typename T >
-inline obj::ValuePtr::ValuePtr(const T & v) : Base(Value::make(v))
+template<typename T>
+inline bool operator == (const Value& x, T y)
 {
+	if(auto xv = dynamic_cast<const ValueImpl<T>*>(&x))
+		return xv->value() == y;
+	else 
+		return false;
+}
+template<>
+inline bool operator == (const Value& x, const char* y)
+{
+	return x == String(y);
+}
+
+template< typename T >
+inline ValuePtr::ValuePtr(const T & v) : Base(Value::make(v))
+{
+}
 }

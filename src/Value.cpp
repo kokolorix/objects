@@ -106,3 +106,13 @@ ValuePtr obj::Value::parse(const String & s)
 	return Value::make(s);
 	*/
 }
+
+ValuePtr obj::Value::make()
+{
+	return make_shared<NothingValue<Unknown>>();
+}
+
+ValuePtr obj::Value::make(std::initializer_list<ValuePtr> v)
+{
+	return make_shared<ValueImpl<ValuePtrVector>>(ValuePtrVector(v));
+}

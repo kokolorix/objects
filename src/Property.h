@@ -13,9 +13,9 @@ using ::std::vector;
 
 namespace obj
 {
-class Property;
-using PropertyPtr = shared_ptr<Property>;
-
+//class Property;
+//using PropertyPtr = shared_ptr<Property>;
+//
 class Property : public Thing
 {
 public:
@@ -38,8 +38,22 @@ public:
 	String& name() { return _name; }
 	ValuePtr value() const { return _value; }
 	ValuePtr& value() { return _value; }
-	static PropertyPtr make(String n, ValuePtr v = ValuePtr()) { return std::make_shared<Property>(n, v); }
-	static PropertyPtr make(IdType id, String n, ValuePtr v = ValuePtr()) { return std::make_shared<Property>(id, n, v); }
+	static PropertyPtr make(String n, ValuePtr v = ValuePtr()) { return make_shared<Property>(n, v); }
+	static PropertyPtr make(IdType id, String n, ValuePtr v = ValuePtr()) { return make_shared<Property>(id, n, v); }
+	template<typename T>
+	inline static PropertyPtr make(String n, shared_ptr<ValueImpl<T>> v) 
+	{
+		return make_shared<Property>(n, v); 
+	}
+	template<typename T>
+	inline static PropertyPtr make(String n, T v)
+	{
+		return make_shared<Property>(n, Value::make(v)); 
+	}
+	inline static PropertyPtr make(String n, std::initializer_list<ValuePtr> v)
+	{
+		return make_shared<Property>(n, Value::make(v)); 
+	}
 
 private:
 	IdType _id;

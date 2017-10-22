@@ -32,7 +32,7 @@ String TEXT_NODE = "#text_node#";
 			return Value::parse(node->value());
 		ObjectPtr o = objectFromXml(node);
 		if (o->properties().empty())
-			return NothingValue<Unknown>::make();
+			return Value::make();
 		if (o->properties().size() == 1)
 			if (auto v = dynamic_pointer_cast<VectorValue>(o->properties().front()->value()))
 				return v;
@@ -65,7 +65,8 @@ String TEXT_NODE = "#text_node#";
 		}
 		for (XmlNode* n = node->first_node(); n; n = n->next_sibling())
 		{
-			if (auto v = dynamic_pointer_cast<VectorValue>(obj->at(n->name())))
+			PropertyPtr p = obj->property(n->name());
+			if (auto v = dynamic_pointer_cast<VectorValue>(p ? p->value() : ValuePtr()))
 			{
 				ValuePtr value = valueFromXml(n);
 				const_cast<ValuePtrVector&>(v->value()).push_back(value);
@@ -82,7 +83,7 @@ String TEXT_NODE = "#text_node#";
 			{
 				ObjectPtr o = objectFromXml(n);
 				if (o->properties().empty())
-					obj->properties().push_back(Property::make(n->name(), NothingValue<Unknown>::make()));
+					obj->properties().push_back(Property::make(n->name(), Value::make()));
 				else
 					obj->properties().push_back(Property::make(n->name(), o));
 			}
