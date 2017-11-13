@@ -1,12 +1,9 @@
 #pragma once
-//#define _SCL_SCURE_NO_WARNINGS
 
-#include "Thing.h"
+#include "SharedPtr.h"
+
 #include <boost/uuid/uuid.hpp>
-//#pragma warning(push)
-//#pragma warning(disable:4996)
 #include <boost/uuid/uuid_io.hpp>
-//#pragma warning(pop)
 #include <boost/uuid/uuid_serialize.hpp>
 #ifdef __MINGW32__
 #pragma GCC diagnostic ignored "-Wconversion-null"
@@ -17,7 +14,6 @@
 #endif
 #include <boost/lexical_cast.hpp>
 
-
 namespace obj
 {
 using UuId = boost::uuids::uuid;
@@ -26,13 +22,6 @@ extern boost::uuids::nil_generator generateNullId;
 extern boost::uuids::string_generator generateIdFromString;
 
 using boost::lexical_cast;
-
-using IdType = uint32_t;
-extern const IdType nullId;
-
-class Value;
-class Property;
-using PropertyPtr = shared_ptr<Property>;
 }
 
 template<>
@@ -54,59 +43,6 @@ inline obj::UuId boost::lexical_cast(const obj::String& str) { return obj::gener
 
 namespace obj
 {
-struct ValuePtr : public shared_ptr<const Value>
-{
-	using Base = shared_ptr<const Value>;
-	using Base::Base;
-	//ValuePtr operator [] (String name);
-	ValuePtr() : Base() {}
-	template<typename T>	ValuePtr(const T& v);
-	operator String() const;
-	operator int32_t() const;
-};
-using ValuePtrVector = std::vector<ValuePtr>;
-template <typename T> class ValueImpl;
-
-template<class ContainerT>
-class Result
-{
-public:
-	Result(const String& n, ContainerT& c ):_name(n), _container(c) {}
-	Result(const String& n, ContainerT& c, ValuePtr r ):_name(n), _container(c), _result(r) {}
-	Result(const Result& r) = default;
-
-private:
-	IdType _id;
-	String _name;
-	ContainerT _container;
-	ValuePtr _result;
-	
-public:
-	Result& operator =(ValuePtr r);
-	Result& operator +=(ValuePtr r);
-	ValuePtr& operator [] (size_t i);
-	const Value& operator * () const { return *_result; }
-	ValuePtr operator -> () { return _result; }
-	operator ValuePtr () { return _result; }
-	operator String () { return _name; }
-	template<class ResT>
-	operator shared_ptr<ResT>() { return dynamic_pointer_cast<ResT>(_result); }
-
-public:
-
-};
-
-class Object;
-struct ObjectPtr : public shared_ptr<Object>
-{
-	using Base = shared_ptr<Object>;
-	using Base::Base;
-	Result<ObjectPtr> operator [] (String name);
-	ObjectPtr& operator += (PropertyPtr p);
-};
-
-using ObjectPtrVector = std::vector<ObjectPtr>;
-
 bool operator < (ObjectPtr x, ObjectPtr y);
 bool operator == (ObjectPtr x, ObjectPtr y);
 
@@ -205,12 +141,12 @@ private:
 template<typename T>
 inline ValuePtr Value::make(T v){	return make_shared<ValueImpl<T>>(v);}
 template<>
-inline ValuePtr Value::make(const char* v){	return make_shared<ValueImpl<String>>(v);}
+inline ValuePtr Value::make(const String::value_type* v){	return make_shared<ValueImpl<String>>(v);}
 
 template<typename T>
 inline ValuePtr Value::make(IdType id, T v){	return make_shared<ValueImpl<T>>(id, v);}
 template<>
-inline ValuePtr Value::make(IdType id, const char* v){	return make_shared<ValueImpl<String>>(id, v);}
+inline ValuePtr Value::make(IdType id, const String::value_type* v){	return make_shared<ValueImpl<String>>(id, v);}
 
 using StringValue = const ValueImpl<String>;
 using StringValuePtr = std::shared_ptr<StringValue>;
@@ -244,7 +180,7 @@ String UuIdValue::toString() const
 }
 
 using ObjectValue = const ValueImpl<ObjectPtr>;
-using ObjectValuePtr = std::shared_ptr<ObjectPtr>;
+using ObjectValuePtr = std::shared_ptr<ObjectValue>;
 template<>
 String ObjectValue::toString() const;
 
@@ -278,7 +214,11 @@ inline bool operator == (const Value& x, const char* y)
 }
 
 template< typename T >
-inline ValuePtr::ValuePtr(const T & v) : Base(Value::make(v))
+inline ValuePtr::ValuePtr(T v) : Base(Value::make(v))
 {
 }
+inline ValuePtr::ValuePtr(const String::value_type* v) : Base(Value::make(v))
+{
+}
+
 }

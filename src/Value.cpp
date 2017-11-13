@@ -1,6 +1,8 @@
 #include "stdafx.h"
 //#define _CRT_SECURE_NO_WARNINGS
 #include "Value.h"
+#include "Property.h"
+#include "Object.h"
 #include <boost/preprocessor.hpp>
 #include <boost/algorithm/string.hpp>
 #include <regex>
@@ -42,6 +44,10 @@ String VectorValue::toString() const
 	return os.str();
 }
 
+obj::ValuePtr::ValuePtr(std::initializer_list<ValuePtr> r)
+	: Base(Value::make(r))
+{
+}
 
 obj::ValuePtr::operator String() const
 {
@@ -116,3 +122,4 @@ ValuePtr obj::Value::make(std::initializer_list<ValuePtr> v)
 {
 	return make_shared<ValueImpl<ValuePtrVector>>(ValuePtrVector(v));
 }
+

@@ -13,11 +13,14 @@ using XmlAttribute = rapidxml::xml_attribute<String::value_type>;
 
 namespace xml
 {
+extern String ELEMENT_NAME;
+extern String ROOT_NAME;
+extern String TEXT_NODE;
 ObjectPtr readXml(const XmlDocumentPtr doc);
 ObjectPtr readXml(const XmlDocument& doc);
 ObjectPtr readFile(const Path& filePath);
 ObjectPtr readString(String& xmlString);
-XmlDocumentPtr writeXml(ObjectPtr object);
+XmlDocumentPtr writeXml(ObjectPtr object, const String& rootName = "");
 void writeFile(const Path& filePath, ObjectPtr object);
 String writeString(ObjectPtr object);
 }//xml

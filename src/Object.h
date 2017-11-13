@@ -26,30 +26,14 @@ class Object : public Thing
 			return Thing::operator<(other);
 	}
 	bool operator < (const Object& other) const;
-	ValuePtr value(const String& name, ValuePtr default = ValuePtr());
+	ValuePtr value(const String& name, ValuePtr default = ValuePtr()) const;
+	PropertyPtr property(const String &name) const;
 
 
  protected:
  public:
 	virtual operator String() const { return toString(); }
-
-	PropertyPtr property(const String &name)
-	{
-		auto it = std::find_if(_properties.begin(), _properties.end(), [name](PropertyPtr p) { return p->name() == name; });
-		if (it == _properties.end())
-			return PropertyPtr();
-		else
-			return *it;
-	}
-
-	ValuePtr at(const String &name)
-	{
-		PropertyPtr p = property(name);
-		if (p)
-			return p->value();
-		else
-			return Value::make();
-	}
+	ValuePtr& findOrCreate(const String &name, ValuePtr default = Value::make());
 
 	PropertyVector &properties() { return _properties; }
 	const PropertyVector &properties() const { return _properties; }
@@ -60,44 +44,13 @@ class Object : public Thing
 	static ObjectPtr make(PropertyListT p);
 	template <class PropertyListT>
 	static ObjectPtr make(IdType id, PropertyListT p);
+	static ObjectPtr make(std::initializer_list<pair<String, ValuePtr>> r);
 
  private:
 	IdType _id;
 	PropertyVector _properties;
 };
 
-template <>
-inline Result<ObjectPtr> &obj::Result<ObjectPtr>::operator=(ValuePtr value)
-{
-	PropertyPtr p = _container->property(_name);
-	if (p)
-		p->value() = value;
-	else
-		_container->properties().push_back(Property::make(_name, value));
-	return *this;
-}
-template <>
-inline Result<ObjectPtr> &obj::Result<ObjectPtr>::operator+=(ValuePtr value)
-{
-	VectorValuePtr v = *this;
-	if (v)
-		const_cast<ValuePtrVector&>(v->value()).push_back(value);
-	else
-		throw ImpossibleCastException(Format("'%1%' is not from type VectorValue") % typeid(*_result).name());
-	return *this;
-}
-template<>
-inline ValuePtr & Result<ObjectPtr>::operator[](size_t i)
-{
-	VectorValuePtr v = *this;
-	if (v)
-		return const_cast<ValuePtrVector&>(v->value()).at(i);
-	throw ImpossibleCastException(Format("'%1%' is not from type VectorValue") % typeid(*_result).name());
-}
-inline Result<ObjectPtr> ObjectPtr::operator[](String name)
-{	
-	return Result<ObjectPtr>(name, *this, (*this)->at(name));
-}
 inline ObjectPtr Object::make() { return std::make_shared<Object>(); }
 inline ObjectPtr Object::make(IdType id) { return std::make_shared<Object>(id); }
 

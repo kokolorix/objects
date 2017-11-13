@@ -70,7 +70,7 @@ struct LessProperty
 };
 
 using PropertySet = set<PropertyPtr, LessProperty>;
-using PropertyVector = vector<PropertyPtr>;
+
 inline bool operator < (PropertyPtr x, PropertyPtr y)
 {
 	bool result = (x.get() && y.get()) ? (*x < *y) : x.get() < y.get();

@@ -28,6 +28,7 @@ namespace obj
 namespace obj
 {
 using Format = boost::format;
+using boost::str;
 }
 
 

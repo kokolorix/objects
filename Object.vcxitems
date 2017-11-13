@@ -16,12 +16,14 @@
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)src\Object.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)src\Property.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)src\SharedPtr.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)src\Value.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)src\Thing.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="$(MSBuildThisFileDirectory)src\Property.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)src\Object.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)src\SharedPtr.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)src\Thing.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)src\Value.h" />
   </ItemGroup>
