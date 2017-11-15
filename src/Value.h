@@ -142,11 +142,15 @@ template<typename T>
 inline ValuePtr Value::make(T v){	return make_shared<ValueImpl<T>>(v);}
 template<>
 inline ValuePtr Value::make(const String::value_type* v){	return make_shared<ValueImpl<String>>(v);}
+template<>
+inline ValuePtr Value::make(Format v){	return make_shared<ValueImpl<String>>(v.str());}
 
 template<typename T>
 inline ValuePtr Value::make(IdType id, T v){	return make_shared<ValueImpl<T>>(id, v);}
 template<>
 inline ValuePtr Value::make(IdType id, const String::value_type* v){	return make_shared<ValueImpl<String>>(id, v);}
+template<>
+inline ValuePtr Value::make(IdType id, Format v){	return make_shared<ValueImpl<String>>(id, v.str());}
 
 using StringValue = const ValueImpl<String>;
 using StringValuePtr = std::shared_ptr<StringValue>;

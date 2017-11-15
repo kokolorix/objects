@@ -1,5 +1,8 @@
 
 #include "stdafx.h"
+#include <cmath>
+#include "windows.h"
+#include "psapi.h"
 
 #include "SystemTests.h"
 using namespace obj;
@@ -7,6 +10,7 @@ using namespace obj;
 // #include "Data/DataStore.h"
 #include "Value.h"
 #include "Json.h"
+#include "SqLite.h"
 
 namespace
 {
@@ -34,14 +38,17 @@ obj::TestResult obj::Test::SystemTests::runTest()
 void sysT::bigTest()
 {
 	ObjectPtr root = Object::make();
+	root["Objects"] = VectorValue::make(ValuePtrVector());
 
-	for (rsize_t oi = 0; oi < 1000; ++oi)
+	for (rsize_t oi = 0; oi < 50001; ++oi)
 	{
 		ObjectPtr obj = Object::make();
 		String name = str(Format("Object%1%") % oi);
-		obj[name] = name;
+		obj["Name"] = name;
+		//root[name] = obj;
+		root["Objects"] += obj;
 
-		for (size_t pi = 0; pi < 200; pi++)
+		for (size_t pi = 0; pi < 100; pi++)
 		{	
 			String name = str(Format("Propert%1%") % pi);
 			PropertyPtr prp = Property::make(name);
@@ -52,23 +59,44 @@ void sysT::bigTest()
 			}
 			else if (type == 1)
 			{
+				prp->value() = Value::make(oi*pi);
 
 			}
 			else if (type == 2)
 			{
-
+				static const double PI = std::acos(-1);
+				prp->value() = Value::make(oi*pi*PI);
 			}
 			else if (type == 3)
 			{
-
+				prp->value() = BooleanValue::make((oi*pi) % 13);
 			}
 			else if (type == 4)
 			{
-
+				ObjectPtr html = Object::make();
+				html["lang"] = "en";
+				html("head")["meta"] = {
+					{ { "charset", "utf-8" } },
+					{ { "name", "viewport" },{ "content", "width=device-width, initial-scale=1.0" } }
+				};
+				html("head")("title") = "SystemTest";
+				html("head")("style") = "#itm { margin-left:25px; }";
+				html("body")["details"] = "SystemTest";
+				prp->value() = html;
 			}
 		}
-	}
 
+		if ((oi % 10000) == 0)
+		{
+			PROCESS_MEMORY_COUNTERS_EX pmc;
+			GetProcessMemoryInfo(GetCurrentProcess(), (PROCESS_MEMORY_COUNTERS*)&pmc, sizeof(pmc));
+			double virtualMemUsedByMe = pmc.PrivateUsage / 1024.0 / 1024.0;
+			std::cout << "Object " << oi << ", Mem: " << virtualMemUsedByMe << "MB" << std::endl;
+		}
+	}
+	fs::remove("../big_test.db3");
+	DbHolder db("../big_test.db3");
+	db.writeObject(root);
 }
 void sysT::htmlTest()
 {
