@@ -14,17 +14,17 @@
     <ProjectCapability Include="SourceItemsFromImports" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="$(MSBuildThisFileDirectory)src\Object.cpp" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)src\Property.cpp" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)src\SharedPtr.cpp" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)src\Value.cpp" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)src\Thing.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)Object.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)Property.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)SharedPtr.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)Value.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)Thing.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="$(MSBuildThisFileDirectory)src\Property.h" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)src\Object.h" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)src\SharedPtr.h" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)src\Thing.h" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)src\Value.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Property.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Object.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)SharedPtr.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Thing.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Value.h" />
   </ItemGroup>
 </Project>

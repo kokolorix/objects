@@ -105,4 +105,16 @@ private:
 	struct Impl;
 	std::unique_ptr<Impl> _pimpl;
 };
+
+template<typename T>
+struct MemberProperty
+{
+	MemberProperty(T& m) :_m(m) {}
+	MemberProperty& operator =(const MemberProperty& o) { _m = o._m; return *this; }
+	operator const T& () const { return _m; }
+	operator T& () { return _m; }
+	T& operator = (const T& m) { _m = m; return _m; }
+	T& _m;
+};
+
 }

@@ -56,8 +56,9 @@
   <ImportGroup Label="ExtensionSettings">
   </ImportGroup>
   <ImportGroup Label="Shared">
-    <Import Project="..\Object.vcxitems" Label="Shared" />
-    <Import Project="..\Serialization.vcxitems" Label="Shared" />
+    <Import Project="..\Object\Object.vcxitems" Label="Shared" />
+    <Import Project="..\Serialization\Serialization.vcxitems" Label="Shared" />
+    <Import Project="..\Process\Process.vcxitems" Label="Shared" />
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
@@ -174,6 +175,7 @@
     <ClInclude Include="SystemTests.h" />
     <ClInclude Include="targetver.h" />
     <ClInclude Include="Test.h" />
+    <ClInclude Include="ThreadTests.h" />
     <ClInclude Include="XmlTests.h" />
   </ItemGroup>
   <ItemGroup>
@@ -187,6 +189,7 @@
     </ClCompile>
     <ClCompile Include="SystemTests.cpp" />
     <ClCompile Include="Test.cpp" />
+    <ClCompile Include="ThreadTests.cpp" />
     <ClCompile Include="UnitTest.cpp" />
     <ClCompile Include="XmlTests.cpp" />
   </ItemGroup>
