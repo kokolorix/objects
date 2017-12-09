@@ -51,9 +51,10 @@ ObjectPtr obj::db::readObject(const String & dbName, IdType id)
 IdType obj::db::writeObject(const String & dbName, ObjectPtr object)
 {
 	DbPtr db = cacheDb(dbName, FIND_OR_CREATE);
-	//if(checkDb(*db, dbName))
-		return writeObjectToDb(*db, object);
-	return IdType();
+	*db << "begin;";
+	IdType id = writeObjectToDb(*db, object);
+	*db << "commit;";
+	return id;
 }
 
 IdType writeObjectToDb(database& db, ObjectPtr object)
