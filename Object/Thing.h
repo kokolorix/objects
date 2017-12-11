@@ -13,6 +13,7 @@ using ::std::make_unique;
 using ::std::shared_ptr;
 using ::std::make_shared;
 using ::std::dynamic_pointer_cast;
+using ::std::function;
 
 using String = std::string;
 }
@@ -114,7 +115,10 @@ struct MemberProperty
 	operator const T& () const { return _m; }
 	operator T& () { return _m; }
 	T& operator = (const T& m) { _m = m; return _m; }
+private:
 	T& _m;
+	//function<T()> _getter;
+	//function<void(const T&)> _setter;
 };
 
 }

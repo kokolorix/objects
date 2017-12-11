@@ -26,10 +26,10 @@ namespace obj
 {
 	class Thread;
 	using ThreadPtr = shared_ptr<Thread>;
-	typedef UuId ThreadId;
+	using ThreadId = UuId;
 
 
-	class Thread : public std::enable_shared_from_this<Thread>
+	class Thread : public Thing, public std::enable_shared_from_this<Thread>
 	{
 		explicit Thread(const String& name);
 		friend inline shared_ptr<Thread> make_shared();
@@ -48,7 +48,9 @@ namespace obj
 			unique_ptr<Impl> _pImpl;
 		} Pool;
 
-
+		virtual String toString() const override;
+		virtual bool operator <(const Thing& other) const override;
+		bool operator <(const Thread& other) const;
 
 	public:
 		template<class _Fn, class... _Args>
@@ -71,7 +73,7 @@ namespace obj
 
 		bool joinable() { return _thread.joinable(); }
 		void join() { _thread.join(); }
-		thread::id get_id() { return _thread.get_id(); }
+		thread::id get_id() const { return _thread.get_id(); }
 
 	private:
 		String _name;

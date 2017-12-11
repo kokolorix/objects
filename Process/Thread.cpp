@@ -21,6 +21,11 @@ obj::Thread::~Thread()
 obj::Thread::ThreadPool obj::Thread::Pool;
 
 
+obj::String obj::Thread::toString() const
+{
+	return _name;
+}
+
 void obj::Thread::enqueue(function<void()> f)
 {
 	{
@@ -55,6 +60,19 @@ void obj::Thread::standardLoop(ThreadPtr pThread)
 
 	} while (pThread->_stopped == false);
 
+}
+
+bool obj::Thread::operator<(const Thing& other) const
+{
+	if (auto o = dynamic_cast<decltype(this)>(&other))
+		return *this < *o;
+	else
+		return Thing::operator<(other);
+}
+
+bool obj::Thread::operator<(const Thread& other) const
+{
+	return get_id() < other.get_id();
 }
 
 void obj::Thread::start()
