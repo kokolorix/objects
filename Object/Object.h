@@ -49,6 +49,9 @@ class Object : public Thing
  private:
 	IdType _id;
 	PropertyVector _properties;
+
+//public:
+//	MemberProperty<IdType> Id;
 };
 
 inline ObjectPtr Object::make() { return std::make_shared<Object>(); }

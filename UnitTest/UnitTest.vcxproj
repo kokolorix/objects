@@ -170,6 +170,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="JsonTests.h" />
+    <ClInclude Include="MemberPropertyTests.h" />
     <ClInclude Include="SqLiteTests.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="SystemTests.h" />
@@ -180,6 +181,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="JsonTests.cpp" />
+    <ClCompile Include="MemberPropertyTests.cpp" />
     <ClCompile Include="SqLiteTests.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>

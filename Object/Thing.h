@@ -110,15 +110,29 @@ private:
 template<typename T>
 struct MemberProperty
 {
-	MemberProperty(T& m) :_m(m) {}
-	MemberProperty& operator =(const MemberProperty& o) { _m = o._m; return *this; }
-	operator const T& () const { return _m; }
-	operator T& () { return _m; }
-	T& operator = (const T& m) { _m = m; return _m; }
+	using Getter = function<T()>;
+	using Setter = function<T(const T&)>;
+
+	MemberProperty(Getter g) : _getter(g) {}
+	MemberProperty(Getter g, Setter s) : _getter(g), _setter(s) {}
+	MemberProperty(T& m, Setter s) : _setter(s)
+	{
+		_getter = [&m]() { return m; };
+	}
+	MemberProperty(Getter g, T& m) : _getter(g)
+	{
+		_setter = [&m](const T& v) { return m = v; };
+	}
+	MemberProperty(T& m)
+	{
+		_getter = [&m]() { return m; };
+		_setter = [&m](const T& v) { return m = v; };
+	}
+	operator T () const { return _getter(); }
+	T operator = (const T& m) { return _setter(m); }
 private:
-	T& _m;
-	//function<T()> _getter;
-	//function<void(const T&)> _setter;
+	Getter _getter;
+	Setter _setter;
 };
 
 }
