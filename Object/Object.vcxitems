@@ -21,6 +21,7 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)Thing.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="$(MSBuildThisFileDirectory)MemberProperty.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Property.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Object.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)SharedPtr.h" />
